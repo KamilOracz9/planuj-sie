@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CacheKeys;
+use App\Http\Requests\BrandRequest;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
-use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
@@ -34,7 +34,7 @@ class BrandController extends Controller
         return response()->json($brand);
     }
 
-    public function update(Request $request, int $id)
+    public function update(BrandRequest $request, int $id)
     {
         $brand = Brand::findOrFail($id);
 
@@ -45,7 +45,7 @@ class BrandController extends Controller
         return response()->json(new BrandResource($brand));
     }
 
-    public function create(Request $request)
+    public function create(BrandRequest $request)
     {
         $brand = new Brand($request->query());
 

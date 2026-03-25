@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CacheKeys;
+use App\Http\Requests\ChannelRequest;
 use App\Models\Channel;
-use Illuminate\Http\Request;
 use App\Http\Resources\ChannelResource;
 
 class ChannelController extends Controller
@@ -34,7 +34,7 @@ class ChannelController extends Controller
         return response()->json($channel);
     }
 
-    public function update(Request $request, int $id)
+    public function update(ChannelRequest $request, int $id)
     {
         $channel = Channel::findOrFail($id);
 
@@ -45,7 +45,7 @@ class ChannelController extends Controller
         return response()->json(new ChannelResource($channel));
     }
 
-    public function create(Request $request)
+    public function create(ChannelRequest $request)
     {
         $channel = new Channel($request->query());
 
