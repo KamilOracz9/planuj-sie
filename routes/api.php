@@ -23,10 +23,21 @@ Route::group(['middleware' => 'api'], function () {
             Route::delete('/{id}', [\App\Http\Controllers\BrandController::class, 'destroy']);
         });
 
+        Route::group(['prefix' => 'channels'], function () {
+            Route::put('/{id}', [\App\Http\Controllers\ChannelController::class, 'update']);
+            Route::post('/create', [\App\Http\Controllers\ChannelController::class, 'create']);
+            Route::delete('/{id}', [\App\Http\Controllers\ChannelController::class, 'destroy']);
+        });
+
         Route::group(['prefix' => '{locale}'], function () {
             Route::group(['prefix' => 'brands'], function () {
                 Route::get('/', [\App\Http\Controllers\BrandController::class, 'index']);
                 Route::get('/{id}', [\App\Http\Controllers\BrandController::class, 'show']);
+            });
+
+            Route::group(['prefix' => 'channels'], function () {
+                Route::get('/', [\App\Http\Controllers\ChannelController::class, 'index']);
+                Route::get('/{id}', [\App\Http\Controllers\ChannelController::class, 'show']);
             });
         });
     });

@@ -42,7 +42,7 @@ class BrandController extends Controller
 
         $brand->save();
 
-        return response()->json($brand);
+        return response()->json(new BrandResource($brand));
     }
 
     public function create(Request $request)
@@ -51,7 +51,7 @@ class BrandController extends Controller
 
         $brand->save();
 
-        return response()->json($brand, 201);
+        return response()->json(new BrandResource($brand), 201);
     }
 
     public function destroy(int $id)
@@ -60,6 +60,6 @@ class BrandController extends Controller
 
         $brand->delete();
 
-        return response()->json($brand);
+        return response()->json(new BrandResource($brand));
     }
 }
