@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Enums;
+
+enum CacheKeys: string
+{
+    case USERS_LIST = 'users_list';
+    case BRANDS_LIST = 'brands_list';
+}
