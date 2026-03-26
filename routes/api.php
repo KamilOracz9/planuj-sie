@@ -2,43 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Models\Brand;
+use App\Models\Channel;
+use App\Models\Locale;
+use App\Models\User;
 
 Route::group(['middleware' => 'api'], function () {
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::group(['middleware' => 'auth:api'], function () {
+    // Route::group(['middleware' => 'auth:api'], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
 
-        Route::group(['prefix' => 'users'], function () {
-            Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
-            Route::get('/{id}', [\App\Http\Controllers\UserController::class, 'show']);
-            Route::post('/create', [\App\Http\Controllers\UserController::class, 'create']);
-            Route::delete('/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
-        });
-
-        Route::group(['prefix' => 'brands'], function () {
-            Route::put('/{id}', [\App\Http\Controllers\BrandController::class, 'update']);
-            Route::post('/create', [\App\Http\Controllers\BrandController::class, 'create']);
-            Route::delete('/{id}', [\App\Http\Controllers\BrandController::class, 'destroy']);
-        });
-
-        Route::group(['prefix' => 'channels'], function () {
-            Route::put('/{id}', [\App\Http\Controllers\ChannelController::class, 'update']);
-            Route::post('/create', [\App\Http\Controllers\ChannelController::class, 'create']);
-            Route::delete('/{id}', [\App\Http\Controllers\ChannelController::class, 'destroy']);
-        });
-
-        Route::group(['prefix' => '{locale}'], function () {
-            Route::group(['prefix' => 'brands'], function () {
-                Route::get('/', [\App\Http\Controllers\BrandController::class, 'index']);
-                Route::get('/{id}', [\App\Http\Controllers\BrandController::class, 'show']);
-            });
-
-            Route::group(['prefix' => 'channels'], function () {
-                Route::get('/', [\App\Http\Controllers\ChannelController::class, 'index']);
-                Route::get('/{id}', [\App\Http\Controllers\ChannelController::class, 'show']);
-            });
-        });
-    });
+        User::routes();
+        Brand::routes();
+        Channel::routes();
+        Locale::routes();
+    // });
 });

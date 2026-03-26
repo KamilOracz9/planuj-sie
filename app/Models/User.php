@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Route;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 #[Fillable(['name', 'email', 'password'])]
@@ -37,5 +38,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public static function routes()
+    {
+        return Route::group(['prefix' => 'users'], function () {
+            Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
+            Route::get('/{id}', [\App\Http\Controllers\UserController::class, 'show']);
+            Route::post('/create', [\App\Http\Controllers\UserController::class, 'create']);
+            Route::delete('/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
+        });
     }
 }
