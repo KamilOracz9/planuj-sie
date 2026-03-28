@@ -45,7 +45,7 @@ class LocaleController extends Controller
 
         $locale->update($request->query());
 
-        return response()->json(new LocaleResource($locale));
+        return response()->json(['id' => $locale->id]);
     }
 
     public function create(LocaleRequest $request)
@@ -63,6 +63,6 @@ class LocaleController extends Controller
 
         $locale->delete();
 
-        return response()->json(new LocaleResource($locale));
+        return response()->json(['id' => $locale->id]);
     }
 }
