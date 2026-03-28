@@ -15,14 +15,11 @@ trait HasTranslations
             DB::transaction(function () use ($model, $translationModel) {
                 $model->deleteTranslations();
 
-                foreach (request()->only($model->translatable) as $attribute => $locales) {
-                    foreach ($locales as $locale => $value) {
-                        (new $translationModel([
-                            $translationModel::FOREIGN_KEY => $model->id,
-                            'locale' => $locale,
-                            $attribute => $value
-                        ]))->save();
-                    }
+                foreach(self::mapTranslations(request()->only($model->translatable)) as $translationData) {
+                    (new $translationModel([
+                        $translationModel::FOREIGN_KEY => $model->id,
+                        ...$translationData
+                    ]))->save();
                 }
             });
         });
@@ -58,5 +55,26 @@ trait HasTranslations
         DB::transaction(function () use ($translationModel) {
             $translationModel::query()->where($translationModel::FOREIGN_KEY, $this->id)->delete();
         });
+    }
+
+    private static function mapTranslations(array $data): array
+    {
+        $result = [];
+
+        foreach ($data as $attribute => $locales) {
+            if (!is_array($locales)) {
+                continue;
+            }
+
+            foreach ($locales as $locale => $value) {
+                if (!isset($result[$locale])) {
+                    $result[$locale] = ['locale' => $locale];
+                }
+
+                $result[$locale][$attribute] = $value;
+            }
+        }
+
+        return array_values($result);
     }
 }

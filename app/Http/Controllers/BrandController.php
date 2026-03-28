@@ -6,60 +6,37 @@ use App\Enums\CacheKeys;
 use App\Http\Requests\BrandRequest;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
+use App\Models\Translations\BrandTranslation;
 
-class BrandController extends Controller
+class BrandController extends BaseController
 {
-    public function index(string $locale)
+    protected string $listCacheKey = CacheKeys::BRANDS_LIST->value;
+    protected string $resourceClass = BrandResource::class;
+
+    protected $model;
+    protected $modelTranslation;
+
+    public function __construct()
     {
-        app()->setLocale($locale);
-
-        $brands = cache()->remember(
-            CacheKeys::BRANDS_LIST->value,
-            config('app.cache_lifetime'),
-            fn() => Brand::select(...Brand::LIST_FIELDS)
-                ->get()
-                ->toResourceCollection(BrandResource::class)
-                ->toArray(request())
-        );
-
-        return response()->json($brands);
-    }
-
-    public function show(string $locale, int $id)
-    {
-        app()->setLocale($locale);
-
-        $brand = new BrandResource(Brand::findOrFail($id));
-
-        return response()->json($brand);
+        $this->model = new Brand;
+        $this->modelTranslation = new BrandTranslation;
     }
 
     public function update(BrandRequest $request, int $id)
     {
-        $brand = Brand::findOrFail($id);
+        $model = Brand::findOrFail($id);
 
-        $brand->fill($request->query());
+        $model->update($request->query());
 
-        $brand->save();
-
-        return response()->json(new BrandResource($brand));
+        return response()->json(['id' => $model->id]);
     }
 
     public function create(BrandRequest $request)
     {
-        $brand = new Brand($request->query());
+        $model = new Brand($request->query());
 
-        $brand->save();
+        $model->save();
 
-        return response()->json(new BrandResource($brand), 201);
-    }
-
-    public function destroy(int $id)
-    {
-        $brand = Brand::findOrFail($id);
-
-        $brand->delete();
-
-        return response()->json(new BrandResource($brand));
+        return response()->json(['id' => $model->id], 201);
     }
 }
