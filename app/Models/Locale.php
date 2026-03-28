@@ -3,34 +3,25 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
-use App\Models\Translations\LocaleTranslation;
 use App\QueryBuilders\LocaleQueryBuilder;
+use App\Traits\HasCache;
 use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Support\Facades\Route;
 
 #[Fillable(['code', 'id'])]
-#[Hidden(['id'])]
 class Locale extends BaseModel
 {
-    use HasTranslations;
+    use HasTranslations, HasCache;
+
+    private array $translatable = ['name'];
 
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function () {
-            self::clearCache();
-        });
-
-        static::updating(function () {
-            self::clearCache();
-        });
-
-        static::deleting(function () {
-            self::clearCache();
-        });
+        static::bootTranslations();
+        static::bootCache();
     }
 
     public static function routes()
@@ -50,18 +41,11 @@ class Locale extends BaseModel
         ];
     }
 
-    public static function getListFields()
-    {
-        return [
-            self::columnName('id'),
-            self::columnName('code'),
-            LocaleTranslation::columnName('name'),
-        ];
-    }
-
     private static function clearCache()
     {
-        cache()->forget(CacheKeys::LOCALES_LIST->value);
+        foreach(config('app.supported_locales') as $locale) {
+            cache()->forget(CacheKeys::LOCALES_LIST->value . "_$locale");
+        }
     }
 
     public static function newQueryBuilder()

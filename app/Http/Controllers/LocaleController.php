@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Collections\LocaleCollection;
 use App\Enums\CacheKeys;
 use App\Http\Requests\LocaleRequest;
 use App\Http\Resources\LocaleResource;
@@ -13,18 +12,18 @@ class LocaleController extends Controller
 {
     public function index(string $locale)
     {
-        $locales = cache()->remember(
-            CacheKeys::LOCALES_LIST->value,
+        $data = cache()->remember(
+            CacheKeys::LOCALES_LIST->value . "_$locale",
             config('app.cache_lifetime'),
-            fn() => new LocaleCollection(
-                Locale::queryBuilder()
-                    ->withTranslation(LocaleTranslation::class, $locale, 'id', 'locale_id', Locale::class)
-                    ->listSelect()
-                    ->get()
-            )
+            fn() => Locale::queryBuilder()
+                ->withTranslation(LocaleTranslation::class, $locale, 'id', 'locale_id', Locale::class)
+                ->listSelect()
+                ->get()
+                ->map(fn($item) => (array) $item)
+                ->toArray()
         );
-
-        return response()->json($locales);
+    
+        return response()->json($data);
     }
 
     public function show(string $locale, int $id)
@@ -44,9 +43,7 @@ class LocaleController extends Controller
     {
         $locale = Locale::findOrFail($id);
 
-        $locale->fill($request->query());
-
-        $locale->save();
+        $locale->update($request->query());
 
         return response()->json(new LocaleResource($locale));
     }

@@ -24,9 +24,9 @@ class LocaleRequest extends FormRequest
     {
         return [
             'name' => ['required', 'array'],
-            'name.pl' => ['required', 'string', 'max:255'],
+            'name.pl_PL' => ['required', 'string', 'max:255'],
             'name.*' => ['nullable', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:255', 'unique:locales,code'],
+            'code' => ['required', 'string', 'max:255', 'unique:locales,code,' . $this->route('id')],
         ];
     }
 
