@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
-use App\QueryBuilders\CategoryQueryBuilder;
+use App\QueryBuilders\ProductQueryBuilder;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 
-#[Fillable(['id', 'parent_id'])]
-class Category extends BaseModel
+#[Fillable(['id', 'category_id'])]
+class Product extends BaseModel
 {
     use HasTranslations, HasCache, Sluggable;
 
@@ -30,15 +30,15 @@ class Category extends BaseModel
     public static function routes()
     {
         return [
-            Route::group(['prefix' => 'categories'], function () {
-                Route::put('/{id}', [\App\Http\Controllers\CategoryController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\CategoryController::class, 'create']);
-                Route::delete('/{id}', [\App\Http\Controllers\CategoryController::class, 'destroy']);
+            Route::group(['prefix' => 'products'], function () {
+                Route::put('/{id}', [\App\Http\Controllers\ProductController::class, 'update']);
+                Route::post('/create', [\App\Http\Controllers\ProductController::class, 'create']);
+                Route::delete('/{id}', [\App\Http\Controllers\ProductController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {
-                Route::group(['prefix' => 'categories'], function () {
-                    Route::get('/', [\App\Http\Controllers\CategoryController::class, 'index']);
-                    Route::get('/{id}', [\App\Http\Controllers\CategoryController::class, 'show']);
+                Route::group(['prefix' => 'products'], function () {
+                    Route::get('/', [\App\Http\Controllers\ProductController::class, 'index']);
+                    Route::get('/{id}', [\App\Http\Controllers\ProductController::class, 'show']);
                 });
             })
         ];
@@ -46,11 +46,11 @@ class Category extends BaseModel
 
     private static function clearCache()
     {
-        static::clearLocaleCache([CacheKeys::CATEGORIES_LIST->value]);
+        static::clearLocaleCache([CacheKeys::PRODUCTS_LIST->value]);
     }
 
     public static function newQueryBuilder()
     {
-        return new CategoryQueryBuilder();
+        return new ProductQueryBuilder();
     }
 }

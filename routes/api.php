@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Locale;
+use App\Models\Product;
 use App\Models\User;
 
 Route::group(['middleware' => 'api'], function () {
@@ -20,5 +21,6 @@ Route::group(['middleware' => 'api'], function () {
         Channel::routes();
         Locale::routes();
         Category::routes();
+        Product::routes();
     // });
 });
