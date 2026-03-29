@@ -8,61 +8,35 @@ use App\Http\Resources\LocaleResource;
 use App\Models\Locale;
 use App\Models\Translations\LocaleTranslation;
 
-class LocaleController extends Controller
+class LocaleController extends BaseController
 {
-    public function index(string $locale)
-    {
-        $data = cache()->remember(
-            CacheKeys::LOCALES_LIST->value . "_$locale",
-            config('app.cache_lifetime'),
-            fn() => Locale::queryBuilder()
-                ->withTranslation(LocaleTranslation::class, $locale, 'id', 'locale_id', Locale::class)
-                ->listSelect()
-                ->get()
-                ->map(fn($item) => (array) $item)
-                ->toArray()
-        );
-    
-        return response()->json($data);
-    }
+    protected string $listCacheKey = CacheKeys::LOCALES_LIST->value;
+    protected string $resourceClass = LocaleResource::class;
 
-    public function show(string $locale, int $id)
-    {
-        $locale = new LocaleResource(
-            Locale::queryBuilder()
-                ->withTranslation(LocaleTranslation::class, $locale, 'id', 'locale_id', Locale::class)
-                ->where(Locale::columnName('id'), $id)
-                ->listSelect()
-                ->first()
-        );
+    protected $model;
+    protected $modelTranslation;
 
-        return response()->json($locale);
+    public function __construct()
+    {
+        $this->model = new Locale;
+        $this->modelTranslation = new LocaleTranslation;
     }
 
     public function update(LocaleRequest $request, int $id)
     {
-        $locale = Locale::findOrFail($id);
+        $model = Locale::findOrFail($id);
 
-        $locale->update($request->query());
+        $model->update($request->query());
 
-        return response()->json(['id' => $locale->id]);
+        return response()->json(['id' => $model->id]);
     }
 
     public function create(LocaleRequest $request)
     {
-        $locale = new Locale($request->query());
+        $model = new Locale($request->query());
 
-        $locale->save();
+        $model->save();
 
-        return response()->json(new LocaleResource($locale), 201);
-    }
-
-    public function destroy(int $id)
-    {
-        $locale = Locale::findOrFail($id);
-
-        $locale->delete();
-
-        return response()->json(['id' => $locale->id]);
+        return response()->json(['id' => $model->id], 201);
     }
 }

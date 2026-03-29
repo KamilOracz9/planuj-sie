@@ -2,43 +2,24 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Channel;
+use Illuminate\Validation\Rule;
 
-class ChannelRequest extends FormRequest
+class ChannelRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+    protected string $modelClass = Channel::class;
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
+        $channelId = $this->route('id');
+
         return [
             'name' => ['required', 'array'],
-            'name.pl' => ['required', 'string', 'max:255'],
+            'name.pl_PL' => ['required', 'string', 'max:255'],
             'name.*' => ['nullable', 'string', 'max:255'],
+            'slug' => ['required', 'array'],
+            'slug.pl_PL' => ['required', 'string', 'max:255'],
+            'slug.*' => ['nullable', 'string', 'max:255', Rule::unique('channel_translations', 'slug')->ignore($channelId, 'channel_id')],
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new \Illuminate\Http\Exceptions\HttpResponseException(
-            response: response()->json(
-                data: [
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors(),
-                ],
-                status: 422
-            )
-        );
     }
 }

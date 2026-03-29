@@ -46,9 +46,7 @@ class Brand extends BaseModel
 
     private static function clearCache()
     {
-        foreach (config('app.supported_locales') as $locale) {
-            cache()->forget(CacheKeys::BRANDS_LIST->value . "_$locale");
-        }
+        static::clearLocaleCache([CacheKeys::BRANDS_LIST->value]);
     }
 
     public static function newQueryBuilder()

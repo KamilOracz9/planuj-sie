@@ -43,9 +43,7 @@ class Locale extends BaseModel
 
     private static function clearCache()
     {
-        foreach(config('app.supported_locales') as $locale) {
-            cache()->forget(CacheKeys::LOCALES_LIST->value . "_$locale");
-        }
+        static::clearLocaleCache([CacheKeys::LOCALES_LIST->value]);
     }
 
     public static function newQueryBuilder()

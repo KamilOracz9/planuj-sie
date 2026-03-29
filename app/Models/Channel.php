@@ -3,39 +3,28 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\QueryBuilders\ChannelQueryBuilder;
+use App\Traits\HasCache;
+use App\Traits\HasTranslations;
+use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Spatie\Translatable\HasTranslations;
 
-#[Fillable(['name', 'slug'])]
+#[Fillable(['id'])]
 class Channel extends BaseModel
 {
-    use HasTranslations;
+    use HasTranslations, HasCache, Sluggable;
 
-    const LIST_FIELDS = ['id', 'name', 'slug'];
-
-    protected array $translatable = ['name', 'slug'];
+    public array $translatable = ['name', 'slug'];
+    public string $sluggable = 'name';
 
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($channel) {
-            $channel->setTranslations('slug', array_map(fn($item) => Str::slug($item), $channel->getTranslations('name')));
-
-            cache()->forget(CacheKeys::CHANNELS_LIST->value);
-        });
-
-        static::updating(function ($channel) {
-            $channel->setTranslations('slug', array_map(fn($item) => Str::slug($item), $channel->getTranslations('name')));
-
-            cache()->forget(CacheKeys::CHANNELS_LIST->value);
-        });
-
-        static::deleting(function () {
-            cache()->forget(CacheKeys::CHANNELS_LIST->value);
-        });
+        static::bootSluggable();
+        static::bootTranslations();
+        static::bootCache();
     }
 
     public static function routes()
@@ -53,5 +42,15 @@ class Channel extends BaseModel
                 });
             })
         ];
+    }
+
+    private static function clearCache()
+    {
+        static::clearLocaleCache([CacheKeys::CHANNELS_LIST->value]);
+    }
+
+    public static function newQueryBuilder()
+    {
+        return new ChannelQueryBuilder();
     }
 }

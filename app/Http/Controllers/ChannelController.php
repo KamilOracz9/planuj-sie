@@ -6,60 +6,37 @@ use App\Enums\CacheKeys;
 use App\Http\Requests\ChannelRequest;
 use App\Models\Channel;
 use App\Http\Resources\ChannelResource;
+use App\Models\Translations\ChannelTranslation;
 
-class ChannelController extends Controller
+class ChannelController extends BaseController
 {
-    public function index(string $locale)
+    protected string $listCacheKey = CacheKeys::CHANNELS_LIST->value;
+    protected string $resourceClass = ChannelResource::class;
+
+    protected $model;
+    protected $modelTranslation;
+
+    public function __construct()
     {
-        app()->setLocale($locale);
-
-        $channels = cache()->remember(
-            CacheKeys::CHANNELS_LIST->value,
-            config('app.cache_lifetime'),
-            fn() => Channel::select(...Channel::LIST_FIELDS)
-                ->get()
-                ->toResourceCollection(ChannelResource::class)
-                ->toArray(request())
-        );
-
-        return response()->json($channels);
-    }
-
-    public function show(string $locale, int $id)
-    {
-        app()->setLocale($locale);
-
-        $channel = new ChannelResource(Channel::findOrFail($id));
-
-        return response()->json($channel);
+        $this->model = new Channel;
+        $this->modelTranslation = new ChannelTranslation();
     }
 
     public function update(ChannelRequest $request, int $id)
     {
-        $channel = Channel::findOrFail($id);
+        $model = Channel::findOrFail($id);
 
-        $channel->fill($request->query());
+        $model->update($request->query());
 
-        $channel->save();
-
-        return response()->json(new ChannelResource($channel));
+        return response()->json(['id' => $model->id]);
     }
 
     public function create(ChannelRequest $request)
     {
-        $channel = new Channel($request->query());
+        $model = new Channel($request->query());
 
-        $channel->save();
+        $model->save();
 
-        return response()->json(new ChannelResource($channel), 201);
-    }
-
-    public function destroy(int $id)
-    {
-        $channel = Channel::findOrFail($id);
-
-        $channel->delete();
-
-        return response()->json(new ChannelResource($channel));
+        return response()->json(['id' => $model->id], 201);
     }
 }

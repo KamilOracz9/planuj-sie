@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Locale;
+use App\Models\Translations\LocaleTranslation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,10 +21,10 @@ return new class extends Migration
 
         Schema::create('locale_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Locale::class, 'locale_id')->cascadeOnDelete();
+            $table->foreignIdFor(Locale::class, LocaleTranslation::FOREIGN_KEY)->cascadeOnDelete();
             $table->string('locale')->index();
             $table->string('name', 255);
-            $table->unique(['locale_id', 'locale']);
+            $table->unique([LocaleTranslation::FOREIGN_KEY, 'locale']);
         });
     }
 

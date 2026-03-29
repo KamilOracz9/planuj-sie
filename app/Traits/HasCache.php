@@ -14,4 +14,13 @@ trait HasCache
             self::clearCache();
         });
     }
+
+    protected static function clearLocaleCache(array $cacheKeys)
+    {
+        foreach (config('app.supported_locales') as $locale) {
+            foreach ($cacheKeys as $key) {
+                cache()->forget($key . "_$locale");
+            }
+        }
+    }
 }
