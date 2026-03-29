@@ -31,14 +31,14 @@ class Brand extends BaseModel
     {
         return [
             Route::group(['prefix' => 'brands'], function () {
-                Route::put('/{id}', [\App\Http\Controllers\BrandController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\BrandController::class, 'create']);
-                Route::delete('/{id}', [\App\Http\Controllers\BrandController::class, 'destroy']);
+                Route::put('/{id}', [\App\Http\Controllers\PanelControllers\BrandController::class, 'update']);
+                Route::post('/create', [\App\Http\Controllers\PanelControllers\BrandController::class, 'create']);
+                Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\BrandController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'brands'], function () {
-                    Route::get('/', [\App\Http\Controllers\BrandController::class, 'index']);
-                    Route::get('/{id}', [\App\Http\Controllers\BrandController::class, 'show']);
+                    Route::get('/', [\App\Http\Controllers\PanelControllers\BrandController::class, 'index']);
+                    Route::get('/{id}', [\App\Http\Controllers\PanelControllers\BrandController::class, 'show']);
                 });
             })
         ];

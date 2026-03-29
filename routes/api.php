@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PanelControllers\AuthController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Channel;

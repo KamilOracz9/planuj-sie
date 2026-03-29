@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\PanelControllers;
+
+use App\Http\Controllers\Controller;
 
 abstract class BaseController extends Controller
 {

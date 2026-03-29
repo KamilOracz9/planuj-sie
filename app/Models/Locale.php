@@ -28,14 +28,14 @@ class Locale extends BaseModel
     {
         return [
             Route::group(['prefix' => 'locales'], function () {
-                Route::put('/{id}', [\App\Http\Controllers\LocaleController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\LocaleController::class, 'create']);
-                Route::delete('/{id}', [\App\Http\Controllers\LocaleController::class, 'destroy']);
+                Route::put('/{id}', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'update']);
+                Route::post('/create', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'create']);
+                Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'locales'], function () {
-                    Route::get('/', [\App\Http\Controllers\LocaleController::class, 'index']);
-                    Route::get('/{id}', [\App\Http\Controllers\LocaleController::class, 'show']);
+                    Route::get('/', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'index']);
+                    Route::get('/{id}', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'show']);
                 });
             })
         ];

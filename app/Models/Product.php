@@ -31,14 +31,14 @@ class Product extends BaseModel
     {
         return [
             Route::group(['prefix' => 'products'], function () {
-                Route::put('/{id}', [\App\Http\Controllers\ProductController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\ProductController::class, 'create']);
-                Route::delete('/{id}', [\App\Http\Controllers\ProductController::class, 'destroy']);
+                Route::put('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'update']);
+                Route::post('/create', [\App\Http\Controllers\PanelControllers\ProductController::class, 'create']);
+                Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'products'], function () {
-                    Route::get('/', [\App\Http\Controllers\ProductController::class, 'index']);
-                    Route::get('/{id}', [\App\Http\Controllers\ProductController::class, 'show']);
+                    Route::get('/', [\App\Http\Controllers\PanelControllers\ProductController::class, 'index']);
+                    Route::get('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'show']);
                 });
             })
         ];

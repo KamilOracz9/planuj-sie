@@ -43,10 +43,10 @@ class User extends Authenticatable implements JWTSubject
     public static function routes()
     {
         return Route::group(['prefix' => 'users'], function () {
-            Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
-            Route::get('/{id}', [\App\Http\Controllers\UserController::class, 'show']);
-            Route::post('/create', [\App\Http\Controllers\UserController::class, 'create']);
-            Route::delete('/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
+            Route::get('/', [\App\Http\Controllers\PanelControllers\UserController::class, 'index']);
+            Route::get('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'show']);
+            Route::post('/create', [\App\Http\Controllers\PanelControllers\UserController::class, 'create']);
+            Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'destroy']);
         });
     }
 }

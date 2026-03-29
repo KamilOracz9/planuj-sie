@@ -31,14 +31,14 @@ class Channel extends BaseModel
     {
         return [
             Route::group(['prefix' => 'channels'], function () {
-                Route::put('/{id}', [\App\Http\Controllers\ChannelController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\ChannelController::class, 'create']);
-                Route::delete('/{id}', [\App\Http\Controllers\ChannelController::class, 'destroy']);
+                Route::put('/{id}', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'update']);
+                Route::post('/create', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'create']);
+                Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'channels'], function () {
-                    Route::get('/', [\App\Http\Controllers\ChannelController::class, 'index']);
-                    Route::get('/{id}', [\App\Http\Controllers\ChannelController::class, 'show']);
+                    Route::get('/', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'index']);
+                    Route::get('/{id}', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'show']);
                 });
             })
         ];

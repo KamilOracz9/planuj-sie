@@ -31,14 +31,14 @@ class Category extends BaseModel
     {
         return [
             Route::group(['prefix' => 'categories'], function () {
-                Route::put('/{id}', [\App\Http\Controllers\CategoryController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\CategoryController::class, 'create']);
-                Route::delete('/{id}', [\App\Http\Controllers\CategoryController::class, 'destroy']);
+                Route::put('/{id}', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'update']);
+                Route::post('/create', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'create']);
+                Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'categories'], function () {
-                    Route::get('/', [\App\Http\Controllers\CategoryController::class, 'index']);
-                    Route::get('/{id}', [\App\Http\Controllers\CategoryController::class, 'show']);
+                    Route::get('/', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'index']);
+                    Route::get('/{id}', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'show']);
                 });
             })
         ];
