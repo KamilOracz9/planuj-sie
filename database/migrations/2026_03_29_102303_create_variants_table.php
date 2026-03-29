@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\Translations\ProductTranslation;
+use App\Models\Translations\VariantTranslation;
+use App\Models\Variant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,21 +14,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('variants', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Category::class, 'category_id')->cascadeOnDelete();
+            $table->foreignIdFor(Product::class, 'product_id')->cascadeOnDelete();
             $table->timestamps();
         });
 
-        Schema::create('product_translations', function (Blueprint $table) {
+        Schema::create('variant_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Product::class, ProductTranslation::FOREIGN_KEY)->cascadeOnDelete();
+            $table->foreignIdFor(Variant::class, VariantTranslation::FOREIGN_KEY)->cascadeOnDelete();
             $table->string('locale')->index();
             $table->string('name', 255);
             $table->string('slug', 255)->unique();
             $table->text('short_description', 255)->nullable();
             $table->text('description', 500)->nullable();
-            $table->unique([ProductTranslation::FOREIGN_KEY, 'locale']);
+            $table->unique([VariantTranslation::FOREIGN_KEY, 'locale']);
         });
     }
 

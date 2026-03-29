@@ -8,6 +8,7 @@ use App\Models\Channel;
 use App\Models\Locale;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Variant;
 
 Route::group(['middleware' => 'api'], function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -22,5 +23,6 @@ Route::group(['middleware' => 'api'], function () {
         Locale::routes();
         Category::routes();
         Product::routes();
+        Variant::routes();
     // });
 });
