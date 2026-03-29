@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Channel;
 use App\Models\Locale;
 use App\Models\User;
@@ -18,5 +19,6 @@ Route::group(['middleware' => 'api'], function () {
         Brand::routes();
         Channel::routes();
         Locale::routes();
+        Category::routes();
     // });
 });

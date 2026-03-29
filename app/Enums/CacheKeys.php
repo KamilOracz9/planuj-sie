@@ -8,4 +8,5 @@ enum CacheKeys: string
     case BRANDS_LIST = 'brands_list';
     case CHANNELS_LIST = 'channels_list';
     case LOCALES_LIST = 'locales_list';
+    case CATEGORIES_LIST = 'categories_list';
 }
