@@ -2,20 +2,40 @@
 
 namespace App\Models;
 
+use App\Enums\CacheKeys;
+use App\QueryBuilders\UserQueryBuilder;
+use App\Traits\HasCache;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Route;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements JWTSubject
+class User extends BaseModel implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract,
+    JWTSubject
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasCache, Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::bootCache();
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -40,13 +60,30 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    private static function clearCache()
+    {
+        static::clearLocaleCache([CacheKeys::USERS_LIST->value]);
+    }
+
     public static function routes()
     {
-        return Route::group(['prefix' => 'users'], function () {
-            Route::get('/', [\App\Http\Controllers\PanelControllers\UserController::class, 'index']);
-            Route::get('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'show']);
-            Route::post('/create', [\App\Http\Controllers\PanelControllers\UserController::class, 'create']);
-            Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'destroy']);
-        });
+        return [
+            Route::group(['prefix' => 'users'], function () {
+                Route::put('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'update']);
+                Route::post('/create', [\App\Http\Controllers\PanelControllers\UserController::class, 'create']);
+                Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'destroy']);
+            }),
+            Route::group(['prefix' => '{locale}'], function () {
+                Route::group(['prefix' => 'users'], function () {
+                    Route::get('/', [\App\Http\Controllers\PanelControllers\UserController::class, 'index']);
+                    Route::get('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'show']);
+                });
+            })
+        ];
+    }
+
+    public static function newQueryBuilder()
+    {
+        return new UserQueryBuilder();
     }
 }

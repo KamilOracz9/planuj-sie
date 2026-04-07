@@ -79,7 +79,7 @@ return [
     */
 
     'supported_locales' => [
-        'pl_PL',
+        'pl-PL',
         'en_US',
     ],
 

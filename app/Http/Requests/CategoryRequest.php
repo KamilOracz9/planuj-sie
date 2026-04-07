@@ -16,14 +16,14 @@ class CategoryRequest extends BaseRequest
 
         return [
             'name' => ['required', 'array'],
-            'name.pl_PL' => ['required', 'string', 'max:255'],
+            'name.pl-PL' => ['required', 'string', 'max:255'],
             'name.*' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'array'],
             'description.*' => ['nullable', 'string', 'max:500'],
             'short_description' => ['nullable', 'array'],
             'short_description.*' => ['nullable', 'string', 'max:500'],
             'slug' => ['required', 'array'],
-            'slug.pl_PL' => ['required', 'string', 'max:255'],
+            'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(CategoryTranslation::tableName(), 'slug')->ignore($categoryId, CategoryTranslation::FOREIGN_KEY)],
             'parent_id' => ['nullable', 'integer', Rule::exists(Category::tableName(), 'id')],
         ];

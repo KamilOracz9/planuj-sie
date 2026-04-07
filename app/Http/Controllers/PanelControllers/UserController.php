@@ -3,51 +3,39 @@
 namespace App\Http\Controllers\PanelControllers;
 
 use App\Enums\CacheKeys;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
-    public function index()
-    {
-        $users = cache()->remember(
-            CacheKeys::USERS_LIST->value,
-            config('app.cache_lifetime'),
-            fn() => User::all()->toArray()
-        );
+    protected string $listCacheKey = CacheKeys::USERS_LIST->value;
+    protected string $resourceClass = UserResource::class;
 
-        return response()->json($users);
+    protected $model;
+    protected $modelTranslation;
+
+    public function __construct()
+    {
+        $this->model = new User;
+        $this->modelTranslation = null;
     }
 
-    public function show(int $id)
+    public function update(UserRequest $request, int $id)
     {
-        $user = User::findOrFail($id);
+        $model = User::findOrFail($id);
 
-        return response()->json($user);
+        $model->update($request->query());
+
+        return response()->json(['id' => $model->id]);
     }
 
-    public function create(Request $request)
+    public function create(UserRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->query('email'),
-            'password' => bcrypt($request->query('password')),
-        ]);
+        $model = new User($request->query());
 
-        cache()->forget(CacheKeys::USERS_LIST->value);
+        $model->save();
 
-        return response()->json($user, 201);
-    }
-
-    public function destroy(int $id)
-    {
-        $user = User::findOrFail($id);
-
-        $user->delete();
-
-        cache()->forget(CacheKeys::USERS_LIST->value);
-
-        return response()->json($user);
+        return response()->json(['id' => $model->id], 201);
     }
 }

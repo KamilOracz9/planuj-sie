@@ -15,10 +15,10 @@ class ChannelRequest extends BaseRequest
 
         return [
             'name' => ['required', 'array'],
-            'name.pl_PL' => ['required', 'string', 'max:255'],
+            'name.pl-PL' => ['required', 'string', 'max:255'],
             'name.*' => ['nullable', 'string', 'max:255'],
             'slug' => ['required', 'array'],
-            'slug.pl_PL' => ['required', 'string', 'max:255'],
+            'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique('channel_translations', 'slug')->ignore($channelId, 'channel_id')],
         ];
     }
