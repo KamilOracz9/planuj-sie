@@ -26,14 +26,14 @@ class BrandController extends BaseController
     {
         $model = Brand::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
     public function create(BrandRequest $request)
     {
-        $model = new Brand($request->query());
+        $model = new Brand($request->validated());
 
         $model->save();
 

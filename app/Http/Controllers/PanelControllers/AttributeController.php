@@ -26,14 +26,14 @@ class AttributeController extends BaseController
     {
         $model = Attribute::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
     public function create(AttributeRequest $request)
     {
-        $model = new Attribute($request->query());
+        $model = new Attribute($request->validated());
 
         $model->save();
 

@@ -26,14 +26,14 @@ class ProductController extends BaseController
     {
         $model = Product::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
     public function create(ProductRequest $request)
     {
-        $model = new Product($request->query());
+        $model = new Product($request->validated());
 
         $model->save();
 

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 
-class UserRequest extends BaseRequest
+class CreateUserRequest extends BaseRequest
 {
     protected string $modelClass = User::class;
 

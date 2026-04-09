@@ -70,7 +70,7 @@ class User extends BaseModel implements
         return [
             Route::group(['prefix' => 'users'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\UserController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\UserController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\UserController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {

@@ -26,14 +26,14 @@ class ChannelController extends BaseController
     {
         $model = Channel::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
     public function create(ChannelRequest $request)
     {
-        $model = new Channel($request->query());
+        $model = new Channel($request->validated());
 
         $model->save();
 

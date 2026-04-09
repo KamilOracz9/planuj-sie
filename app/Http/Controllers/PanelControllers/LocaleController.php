@@ -26,14 +26,14 @@ class LocaleController extends BaseController
     {
         $model = Locale::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
     public function create(LocaleRequest $request)
     {
-        $model = new Locale($request->query());
+        $model = new Locale($request->validated());
 
         $model->save();
 

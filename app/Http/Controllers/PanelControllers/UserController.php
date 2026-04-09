@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\PanelControllers;
 
 use App\Enums\CacheKeys;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -21,18 +22,18 @@ class UserController extends BaseController
         $this->modelTranslation = null;
     }
 
-    public function update(UserRequest $request, int $id)
+    public function update(UpdateUserRequest $request, int $id)
     {
         $model = User::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
-    public function create(UserRequest $request)
+    public function create(CreateUserRequest $request)
     {
-        $model = new User($request->query());
+        $model = new User($request->validated());
 
         $model->save();
 

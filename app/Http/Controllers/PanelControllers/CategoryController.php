@@ -26,14 +26,14 @@ class CategoryController extends BaseController
     {
         $model = Category::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
     public function create(CategoryRequest $request)
     {
-        $model = new Category($request->query());
+        $model = new Category($request->validated());
 
         $model->save();
 

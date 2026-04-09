@@ -26,14 +26,14 @@ class VariantController extends BaseController
     {
         $model = Variant::findOrFail($id);
 
-        $model->update($request->query());
+        $model->update($request->validated());
 
         return response()->json(['id' => $model->id]);
     }
 
     public function create(VariantRequest $request)
     {
-        $model = new Variant($request->query());
+        $model = new Variant($request->validated());
 
         $model->save();
 
