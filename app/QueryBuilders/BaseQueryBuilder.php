@@ -57,6 +57,18 @@ class BaseQueryBuilder extends Builder
             ->where(($alias ?? $i18nTableName) . '.locale', $locale);
     }
 
+    public function withTranslations(mixed $model, string $foreignKey, ?string $primaryKey = 'id', mixed $modelTrough = null, ?string $alias = null)
+    {
+        $i18nTableName = (new ($model))->getTable();
+
+        return $this
+            ->leftJoin(
+                $alias ? $i18nTableName . ' AS ' . $alias : $i18nTableName,
+                ($alias ?? $i18nTableName) . '.' . $primaryKey,
+                ($modelTrough ? (new ($modelTrough)) : $this->getModel())->getTable() . '.' . $foreignKey,
+            );
+    }
+
     // public function isActive()
     // {
     //     return $this->where($this->getModel()->getTable() . '.enabled', true);

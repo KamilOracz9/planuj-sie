@@ -32,7 +32,7 @@ class Category extends BaseModel
         return [
             Route::group(['prefix' => 'categories'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {

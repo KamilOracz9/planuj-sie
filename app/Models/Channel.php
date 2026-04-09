@@ -32,7 +32,7 @@ class Channel extends BaseModel
         return [
             Route::group(['prefix' => 'channels'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {

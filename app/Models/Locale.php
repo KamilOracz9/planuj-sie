@@ -29,7 +29,7 @@ class Locale extends BaseModel
         return [
             Route::group(['prefix' => 'locales'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\LocaleController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {

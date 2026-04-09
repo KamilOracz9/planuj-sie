@@ -32,7 +32,7 @@ class Brand extends BaseModel
         return [
             Route::group(['prefix' => 'brands'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\BrandController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\BrandController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\BrandController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\BrandController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {

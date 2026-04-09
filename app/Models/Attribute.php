@@ -32,7 +32,7 @@ class Attribute extends BaseModel
         return [
             Route::group(['prefix' => 'attributes'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {

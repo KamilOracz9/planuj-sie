@@ -18,6 +18,7 @@ class BrandQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             Brand::columnName('id'),
+            Brand::columnName('created_at'),
             BrandTranslation::columnName('slug'),
             BrandTranslation::columnName('name'),
         ]);

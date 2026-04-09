@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PanelControllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 abstract class BaseController extends Controller
 {
@@ -41,17 +42,14 @@ abstract class BaseController extends Controller
 
     public function show(string $locale, int $id)
     {
-        $model = new $this->resourceClass(
-            $this->model::queryBuilder()
-                ->when(
-                    $this->modelTranslation,
-                    fn($query) => $query
-                        ->withTranslation($this->modelTranslation::class, $locale, 'id', $this->modelTranslation::FOREIGN_KEY, $this->model::class)
-                )
-                ->where($this->model::columnName('id'), $id)
-                ->listSelect()
-                ->first()
-        );
+        $model = $this->model::queryBuilder()
+            ->where($this->model::columnName('id'), $id)
+            ->first();
+
+        $model->translations = DB::table($this->modelTranslation::tableName())
+            ->where($this->modelTranslation::columnName($this->modelTranslation::FOREIGN_KEY), $id)
+            ->get()
+            ->keyBy('locale');
 
         return response()->json($model);
     }

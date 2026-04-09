@@ -32,7 +32,7 @@ class Variant extends BaseModel
         return [
             Route::group(['prefix' => 'variants'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\VariantController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\VariantController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\VariantController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\VariantController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {

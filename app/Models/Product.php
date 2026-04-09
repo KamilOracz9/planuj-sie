@@ -32,7 +32,7 @@ class Product extends BaseModel
         return [
             Route::group(['prefix' => 'products'], function () {
                 Route::put('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'update']);
-                Route::post('/create', [\App\Http\Controllers\PanelControllers\ProductController::class, 'create']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\ProductController::class, 'create']);
                 Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'destroy']);
             }),
             Route::group(['prefix' => '{locale}'], function () {
