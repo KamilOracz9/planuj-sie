@@ -18,6 +18,7 @@ class CategoryQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             Category::columnName('id'),
+            Category::columnName('created_at'),
             CategoryTranslation::columnName('slug'),
             CategoryTranslation::columnName('name'),
         ]);

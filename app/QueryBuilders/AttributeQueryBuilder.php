@@ -18,6 +18,7 @@ class AttributeQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             Attribute::columnName('id'),
+            Attribute::columnName('created_at'),
             AttributeTranslation::columnName('slug'),
             AttributeTranslation::columnName('name'),
             AttributeTranslation::columnName('value'),

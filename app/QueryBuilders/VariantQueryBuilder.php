@@ -18,6 +18,7 @@ class VariantQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             Variant::columnName('id'),
+            Variant::columnName('created_at'),
             VariantTranslation::columnName('slug'),
             VariantTranslation::columnName('name'),
         ]);

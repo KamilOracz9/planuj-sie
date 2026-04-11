@@ -18,6 +18,7 @@ class ProductQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             Product::columnName('id'),
+            Product::columnName('created_at'),
             ProductTranslation::columnName('slug'),
             ProductTranslation::columnName('name'),
         ]);

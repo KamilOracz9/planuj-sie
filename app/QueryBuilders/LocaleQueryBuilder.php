@@ -19,6 +19,7 @@ class LocaleQueryBuilder extends BaseQueryBuilder
         return $this->select([
             Locale::columnName('id'),
             Locale::columnName('code'),
+            Locale::columnName('created_at'),
             LocaleTranslation::columnName('name'),
         ]);
     }
