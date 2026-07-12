@@ -11,10 +11,11 @@ use App\Models\Translations\CategoryTranslation;
 class CategoryController extends BaseController
 {
     protected string $listCacheKey = CacheKeys::CATEGORIES_LIST->value;
+    protected string $selectCacheKey = CacheKeys::CATEGORIES_SELECT->value;
     protected string $resourceClass = CategoryResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

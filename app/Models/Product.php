@@ -10,7 +10,7 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 
-#[Fillable(['id', 'category_id'])]
+#[Fillable(['id'])]
 class Product extends BaseModel
 {
     use HasTranslations, HasCache, Sluggable;
@@ -38,6 +38,7 @@ class Product extends BaseModel
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'products'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\ProductController::class, 'index']);
+                    Route::get('/select', [\App\Http\Controllers\PanelControllers\ProductController::class, 'select']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'show']);
                 });
             })

@@ -15,6 +15,8 @@ class Category extends BaseModel
 {
     use HasTranslations, HasCache, Sluggable;
 
+    const PARENT_CATEGORY_TRANSLATIONTABLE_ALIAS = 'parent_category_translations';
+
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
 
@@ -38,15 +40,11 @@ class Category extends BaseModel
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'categories'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'index']);
+                    Route::get('/select', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'select']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'show']);
                 });
             })
         ];
-    }
-
-    private static function clearCache()
-    {
-        static::clearLocaleCache([CacheKeys::CATEGORIES_LIST->value]);
     }
 
     public static function newQueryBuilder()

@@ -13,8 +13,8 @@ class VariantController extends BaseController
     protected string $listCacheKey = CacheKeys::VARIANTS_LIST->value;
     protected string $resourceClass = VariantResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

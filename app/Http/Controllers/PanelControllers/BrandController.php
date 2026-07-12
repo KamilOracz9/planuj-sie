@@ -13,8 +13,8 @@ class BrandController extends BaseController
     protected string $listCacheKey = CacheKeys::BRANDS_LIST->value;
     protected string $resourceClass = BrandResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

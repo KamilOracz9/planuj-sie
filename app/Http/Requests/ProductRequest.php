@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\Translations\ProductTranslation;
 use Illuminate\Validation\Rule;
@@ -26,7 +25,6 @@ class ProductRequest extends BaseRequest
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(ProductTranslation::tableName(), 'slug')->ignore($productId, ProductTranslation::FOREIGN_KEY)],
-            'category_id' => ['required', 'integer', Rule::exists(Category::tableName(), 'id')],
         ];
     }
 }

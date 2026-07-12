@@ -13,8 +13,8 @@ class AttributeController extends BaseController
     protected string $listCacheKey = CacheKeys::ATTRIBUTES_LIST->value;
     protected string $resourceClass = AttributeResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

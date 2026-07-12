@@ -13,8 +13,8 @@ class ChannelController extends BaseController
     protected string $listCacheKey = CacheKeys::CHANNELS_LIST->value;
     protected string $resourceClass = ChannelResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

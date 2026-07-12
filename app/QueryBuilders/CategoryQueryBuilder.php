@@ -14,13 +14,22 @@ class CategoryQueryBuilder extends BaseQueryBuilder
         parent::__construct();
     }
 
+    public function listExtended(string $locale)
+    {
+        return $this
+            ->withTranslation(CategoryTranslation::class, $locale, 'parent_id', CategoryTranslation::FOREIGN_KEY, Category::class, Category::PARENT_CATEGORY_TRANSLATIONTABLE_ALIAS);
+    }
+
     public function listSelect()
     {
         return $this->select([
             Category::columnName('id'),
+            Category::columnName('parent_id'),
             Category::columnName('created_at'),
             CategoryTranslation::columnName('slug'),
             CategoryTranslation::columnName('name'),
+            Category::PARENT_CATEGORY_TRANSLATIONTABLE_ALIAS . '.name' . ' AS parent_name',
+            Category::PARENT_CATEGORY_TRANSLATIONTABLE_ALIAS . '.slug' . ' AS parent_slug',
         ]);
     }
 }

@@ -13,8 +13,8 @@ class UserController extends BaseController
     protected string $listCacheKey = CacheKeys::USERS_LIST->value;
     protected string $resourceClass = UserResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

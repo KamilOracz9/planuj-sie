@@ -54,7 +54,7 @@ class BaseQueryBuilder extends Builder
                 ($alias ?? $i18nTableName) . '.' . $primaryKey,
                 ($modelTrough ? (new ($modelTrough)) : $this->getModel())->getTable() . '.' . $foreignKey,
             )
-            ->where(($alias ?? $i18nTableName) . '.locale', $locale);
+            ->where(fn ($query) => $query->where(($alias ?? $i18nTableName) . '.locale', $locale)->orWhereNull(($alias ?? $i18nTableName) . '.locale'));
     }
 
     public function withTranslations(mixed $model, string $foreignKey, ?string $primaryKey = 'id', mixed $modelTrough = null, ?string $alias = null)
@@ -69,16 +69,6 @@ class BaseQueryBuilder extends Builder
             );
     }
 
-    // public function isActive()
-    // {
-    //     return $this->where($this->getModel()->getTable() . '.enabled', true);
-    // }
-
-    // public function isEnabled()
-    // {
-    //     return $this->where($this->getModel()->getTable() . '.enabled', true);
-    // }
-
     public function orderByOrderColumn()
     {
         return $this->orderBy($this->getModel()->getTable() . '.order_column');
@@ -86,6 +76,11 @@ class BaseQueryBuilder extends Builder
 
     public function customPaginate()
     {
-        return $this->paginate(request()->get('limit') ?? config('panel.default_paginate_size'));
+        return $this->paginate(request()->input('limit') ?? config('panel.default_paginate_size'));
+    }
+
+    public function listExtended(string $locale)
+    {
+        return $this;
     }
 }

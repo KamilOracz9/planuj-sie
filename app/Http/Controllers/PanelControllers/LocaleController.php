@@ -13,8 +13,8 @@ class LocaleController extends BaseController
     protected string $listCacheKey = CacheKeys::LOCALES_LIST->value;
     protected string $resourceClass = LocaleResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

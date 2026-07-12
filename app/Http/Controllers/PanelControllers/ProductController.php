@@ -11,10 +11,11 @@ use App\Models\Translations\ProductTranslation;
 class ProductController extends BaseController
 {
     protected string $listCacheKey = CacheKeys::PRODUCTS_LIST->value;
+    protected string $selectCacheKey = CacheKeys::PRODUCTS_SELECT->value;
     protected string $resourceClass = ProductResource::class;
 
-    protected $model;
-    protected $modelTranslation;
+    protected mixed $model;
+    protected mixed $modelTranslation;
 
     public function __construct()
     {

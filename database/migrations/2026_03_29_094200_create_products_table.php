@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\Translations\ProductTranslation;
 use Illuminate\Database\Migrations\Migration;
@@ -16,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Category::class, 'category_id')->cascadeOnDelete();
             $table->timestamps();
         });
 
