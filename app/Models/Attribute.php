@@ -10,12 +10,12 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 
-#[Fillable(['id', 'model_id', 'model_type', 'order_column'])]
+#[Fillable(['id', 'order_column'])]
 class Attribute extends BaseModel
 {
     use HasTranslations, HasCache, Sluggable;
 
-    public array $translatable = ['name', 'slug', 'value'];
+    public array $translatable = ['name', 'slug'];
     public string $sluggable = 'name';
 
     protected static function boot()
@@ -46,7 +46,7 @@ class Attribute extends BaseModel
 
     private static function clearCache()
     {
-        static::clearLocaleCache([CacheKeys::CATEGORIES_LIST->value]);
+        static::clearLocaleCache([CacheKeys::ATTRIBUTES_LIST->value]);
     }
 
     public static function newQueryBuilder()

@@ -21,7 +21,6 @@ class AttributeQueryBuilder extends BaseQueryBuilder
             Attribute::columnName('created_at'),
             AttributeTranslation::columnName('slug'),
             AttributeTranslation::columnName('name'),
-            AttributeTranslation::columnName('value'),
         ]);
     }
 }

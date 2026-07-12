@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
 
-            $table->morphs('model');
             $table->unsignedInteger('order_column')->nullable()->index();
             $table->timestamps();
         });
@@ -25,7 +24,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Attribute::class, AttributeTranslation::FOREIGN_KEY)->cascadeOnDelete();
             $table->string('locale')->index();
-            $table->string('value', 255);
             $table->string('name', 255);
             $table->string('slug', 255)->unique();
             $table->unique([AttributeTranslation::FOREIGN_KEY, 'locale']);

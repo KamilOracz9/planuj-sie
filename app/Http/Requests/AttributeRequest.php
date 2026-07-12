@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Attribute;
-use App\Models\Translations\VariantTranslation;
+use App\Models\Translations\AttributeTranslation;
 use Illuminate\Validation\Rule;
 
 class AttributeRequest extends BaseRequest
@@ -20,13 +20,8 @@ class AttributeRequest extends BaseRequest
             'name.*' => ['nullable', 'string', 'max:255'],
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
-            'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(VariantTranslation::tableName(), 'slug')->ignore($productId, VariantTranslation::FOREIGN_KEY)],
-            'model_id' => ['required', 'integer'],
-            'model_type' => ['required', 'string'],
+            'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(AttributeTranslation::tableName(), 'slug')->ignore($productId, AttributeTranslation::FOREIGN_KEY)],
             'order_column' => ['nullable', 'integer'],
-            'value' => ['required', 'array'],
-            'value.pl-PL' => ['required', 'string', 'max:255'],
-            'value.*' => ['nullable', 'string', 'max:255'],
         ];
     }
 }
