@@ -9,13 +9,28 @@ trait HasTranslations
 {
     protected static function bootTranslations()
     {
+        static::saving(function ($model) {
+            foreach ($model->translatable as $attr) {
+                if (is_array($model->getAttributes()[$attr] ?? null)) {
+                    unset($model->$attr);
+                }
+            }
+        });
+
         static::saved(function ($model) {
             $translationModel = $model->getTranslationModel();
 
             DB::transaction(function () use ($model, $translationModel) {
                 $model->deleteTranslations();
 
-                foreach(self::mapTranslations(request()->only($model->translatable)) as $translationData) {
+                $modelAttributeData = array_filter(
+                    array_intersect_key($model->getAttributes(), array_flip($model->translatable)),
+                    fn($v) => is_array($v)
+                );
+                $requestData = request()->only($model->translatable);
+                $data = array_merge($modelAttributeData, $requestData);
+
+                foreach(self::mapTranslations($data) as $translationData) {
                     (new $translationModel([
                         $translationModel::FOREIGN_KEY => $model->id,
                         ...$translationData

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('attribute_values', function (Blueprint $table) {
             $table->id();
-            $table->string('value', 255);
+            $table->json('value');
             $table->unsignedInteger('order_column')->nullable()->index();
             $table->timestamps();
         });

@@ -9,11 +9,12 @@ use App\Traits\HasTranslations;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 #[Fillable(['id'])]
 class Brand extends BaseModel
 {
-    use HasTranslations, HasCache, Sluggable;
+    use HasTranslations, HasCache, Sluggable, HasFactory;
 
     public array $translatable = ['name', 'slug'];
     public string $sluggable = 'name';

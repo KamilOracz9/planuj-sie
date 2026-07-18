@@ -11,7 +11,7 @@ class AttributeValueRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'value' => ['required', 'string', 'max:255'],
+            'value' => ['required', 'json'],
             'order_column' => ['nullable', 'integer'],
         ];
     }
