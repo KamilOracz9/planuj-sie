@@ -13,6 +13,7 @@ enum CacheKeys: string
     case VARIANTS_LIST = 'variants_list';
     case ATTRIBUTES_LIST = 'attributes_list';
     case ATTRIBUTE_VALUES_LIST = 'attribute_values_list';
+    case ATTRIBUTE_OPTIONS_LIST = 'attribute_options_list';
 
     case CATEGORIES_SELECT = 'categories_select';
     case PRODUCTS_SELECT = 'products_select';
