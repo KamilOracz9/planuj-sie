@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PanelControllers\AuthController;
 use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Channel;
@@ -26,5 +27,6 @@ Route::group(['middleware' => 'api'], function () {
         Product::routes();
         Variant::routes();
         Attribute::routes();
+        AttributeValue::routes();
     // });
 });
