@@ -5,6 +5,7 @@ use App\Http\Controllers\PanelControllers\AuthController;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\AttributeOption;
+use App\Models\AttributeType;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Channel;
@@ -30,5 +31,6 @@ Route::group(['middleware' => 'api'], function () {
         Attribute::routes();
         AttributeValue::routes();
         AttributeOption::routes();
+        AttributeType::routes();
     // });
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CacheKeys;
 use App\QueryBuilders\BrandQueryBuilder;
+use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
 use App\Traits\Sluggable;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 #[Fillable(['id'])]
 class Brand extends BaseModel
 {
-    use HasTranslations, HasCache, Sluggable, HasFactory;
+    use HasTranslations, HasCache, Sluggable, HasFactory, HasAttributes;
 
     public array $translatable = ['name', 'slug'];
     public string $sluggable = 'name';
@@ -25,6 +26,7 @@ class Brand extends BaseModel
 
         static::bootSluggable();
         static::bootTranslations();
+        static::bootAttributes();
         static::bootCache();
     }
 

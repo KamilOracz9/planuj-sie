@@ -22,11 +22,20 @@ class BrandSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
         DB::table(BrandTranslation::tableName())->insert([
             'id' => 1,
             'locale' => 'pl-PL',
             'name' => 'Marka 1',
             'slug' => 'marka-1',
+            'brand_id' => 1,
+        ]);
+
+        DB::table(BrandTranslation::tableName())->insert([
+            'id' => 2,
+            'locale' => 'en-US',
+            'name' => 'Brand 1',
+            'slug' => 'brand-1',
             'brand_id' => 1,
         ]);
     }

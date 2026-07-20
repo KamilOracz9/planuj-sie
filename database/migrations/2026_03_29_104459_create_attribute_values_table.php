@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Attribute;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,9 @@ return new class extends Migration
     {
         Schema::create('attribute_values', function (Blueprint $table) {
             $table->id();
-            $table->json('value');
+            $table->foreignIdFor(Attribute::class)->cascadeOnDelete();
+            $table->morphs('model');
+            $table->json('data');
             $table->unsignedInteger('order_column')->nullable()->index();
             $table->timestamps();
         });

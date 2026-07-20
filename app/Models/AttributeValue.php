@@ -8,7 +8,7 @@ use App\Traits\HasCache;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 
-#[Fillable(['id', 'value', 'order_column'])]
+#[Fillable(['id', 'attribute_id', 'data', 'order_column', 'model_id', 'model_type'])]
 class AttributeValue extends BaseModel
 {
     use HasCache;
@@ -31,6 +31,8 @@ class AttributeValue extends BaseModel
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'attribute-values'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\AttributeValueController::class, 'index']);
+                    Route::get('/select', [\App\Http\Controllers\PanelControllers\AttributeValueController::class, 'select']);
+                    Route::get('/select/{modelType}/{modelId}', [\App\Http\Controllers\PanelControllers\AttributeValueController::class, 'selectByModel']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\AttributeValueController::class, 'show']);
                 });
             })

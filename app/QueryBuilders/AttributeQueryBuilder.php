@@ -3,6 +3,7 @@
 namespace App\QueryBuilders;
 
 use App\Models\Attribute;
+use App\Models\AttributeType;
 use App\Models\Translations\AttributeTranslation;
 
 class AttributeQueryBuilder extends BaseQueryBuilder
@@ -18,9 +19,14 @@ class AttributeQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             Attribute::columnName('id'),
-            Attribute::columnName('created_at'),
             AttributeTranslation::columnName('slug'),
             AttributeTranslation::columnName('name'),
+            Attribute::columnName('created_at'),
         ]);
+    }
+
+    public function withAttributeType()
+    {
+        return $this->leftJoin(AttributeType::tableName(), AttributeType::columnName('id'), '=', Attribute::columnName('attribute_type_id'));
     }
 }

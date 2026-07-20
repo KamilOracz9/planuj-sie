@@ -31,5 +31,13 @@ class VariantSeeder extends Seeder
             'slug' => 'wariant-1',
             'variant_id' => 1,
         ]);
+
+        DB::table(VariantTranslation::tableName())->insert([
+            'id' => 2,
+            'locale' => 'en-US',
+            'name' => 'Variant 1',
+            'slug' => 'variant-1',
+            'variant_id' => 1,
+        ]);
     }
 }

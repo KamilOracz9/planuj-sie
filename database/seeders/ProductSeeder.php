@@ -30,5 +30,13 @@ class ProductSeeder extends Seeder
             'slug' => 'produkt-1',
             'product_id' => 1,
         ]);
+        
+        DB::table(ProductTranslation::tableName())->insert([
+            'id' => 2,
+            'locale' => 'en-US',
+            'name' => 'Product 1',
+            'slug' => 'product-1',
+            'product_id' => 1,
+        ]);
     }
 }

@@ -10,7 +10,7 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 
-#[Fillable(['id', 'order_column'])]
+#[Fillable(['id', 'order_column', 'attribute_type_id'])]
 class Attribute extends BaseModel
 {
     use HasTranslations, HasCache, Sluggable;
@@ -38,6 +38,7 @@ class Attribute extends BaseModel
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'attributes'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'index']);
+                    Route::get('/select', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'select']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'show']);
                 });
             })

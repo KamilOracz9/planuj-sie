@@ -7,6 +7,7 @@ use Database\Seeders\CategorySeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\VariantSeeder;
+use Database\Seeders\AttributeTypeSeeder;
 use Database\Seeders\AttributeSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ProductSeeder::class,
             VariantSeeder::class,
+            AttributeTypeSeeder::class,
             AttributeSeeder::class,
         ]);
     }

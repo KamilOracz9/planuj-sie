@@ -11,6 +11,7 @@ use App\Models\Translations\AttributeTranslation;
 class AttributeController extends BaseController
 {
     protected string $listCacheKey = CacheKeys::ATTRIBUTES_LIST->value;
+    protected string $selectCacheKey = CacheKeys::ATTRIBUTES_SELECT->value;
     protected string $resourceClass = AttributeResource::class;
 
     protected mixed $model;

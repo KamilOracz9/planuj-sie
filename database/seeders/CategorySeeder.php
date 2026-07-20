@@ -30,6 +30,14 @@ class CategorySeeder extends Seeder
             'slug' => 'kategoria-1',
             'category_id' => 1,
         ]);
+        
+        DB::table(CategoryTranslation::tableName())->insert([
+            'id' => 2,
+            'locale' => 'en-US',
+            'name' => 'Category 1',
+            'slug' => 'category-1',
+            'category_id' => 1,
+        ]);
 
         DB::table(Category::tableName())->insert([
             'id' => 2,
@@ -39,10 +47,18 @@ class CategorySeeder extends Seeder
         ]);
 
         DB::table(CategoryTranslation::tableName())->insert([
-            'id' => 2,
+            'id' => 3,
             'locale' => 'pl-PL',
             'name' => 'Kategoria 2',
             'slug' => 'kategoria-2',
+            'category_id' => 2,
+        ]);
+
+        DB::table(CategoryTranslation::tableName())->insert([
+            'id' => 4,
+            'locale' => 'en-US',
+            'name' => 'Category 2',
+            'slug' => 'category-2',
             'category_id' => 2,
         ]);
     }

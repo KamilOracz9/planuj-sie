@@ -20,6 +20,9 @@ class BrandRequest extends BaseRequest
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique('brand_translations', 'slug')->ignore($brandId, 'brand_id')],
+            'attributes' => ['nullable', 'array'],
+            'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
+            'attributes.*.data' => ['required', 'string', 'max:255'],
         ];
     }
 }

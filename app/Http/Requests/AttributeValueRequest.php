@@ -11,8 +11,11 @@ class AttributeValueRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'value' => ['required', 'json'],
+            'data' => ['required', 'json'],
+            'attribute_id' => ['required', 'integer', 'exists:attributes,id'],
             'order_column' => ['nullable', 'integer'],
+            'model_id' => ['required', 'string'],
+            'model_type' => ['required', 'string'],
         ];
     }
 }

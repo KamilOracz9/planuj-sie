@@ -19,6 +19,7 @@ class AttributeSeeder extends Seeder
     {
         DB::table(Attribute::tableName())->insert([
             'id' => 1,
+            'attribute_type_id' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -26,8 +27,16 @@ class AttributeSeeder extends Seeder
         DB::table(AttributeTranslation::tableName())->insert([
             'id' => 1,
             'locale' => 'pl-PL',
-            'name' => 'Atrybut 1',
-            'slug' => 'atrybut-1',
+            'name' => 'Atrybut tekstowy 1',
+            'slug' => 'atrybut-tekstowy-1',
+            'attribute_id' => 1,
+        ]);
+
+        DB::table(AttributeTranslation::tableName())->insert([
+            'id' => 2,
+            'locale' => 'en-US',
+            'name' => 'Text attribute 1',
+            'slug' => 'text-attribute-1',
             'attribute_id' => 1,
         ]);
     }
