@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CacheKeys;
 use App\QueryBuilders\CategoryQueryBuilder;
+use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
 use App\Traits\Sluggable;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 #[Fillable(['id', 'parent_id'])]
 class Category extends BaseModel
 {
-    use HasTranslations, HasCache, Sluggable;
+    use HasTranslations, HasCache, Sluggable, HasAttributes;
 
     const PARENT_CATEGORY_TRANSLATIONTABLE_ALIAS = 'parent_category_translations';
 
@@ -26,6 +27,7 @@ class Category extends BaseModel
 
         static::bootSluggable();
         static::bootTranslations();
+        static::bootAttributes();
         static::bootCache();
     }
 
@@ -45,6 +47,12 @@ class Category extends BaseModel
                 });
             })
         ];
+    }
+
+    private static function clearCache()
+    {
+        static::clearLocaleCache([CacheKeys::CATEGORIES_LIST->value]);
+        static::clearLocaleCache([CacheKeys::CATEGORIES_SELECT->value]);
     }
 
     public static function newQueryBuilder()
