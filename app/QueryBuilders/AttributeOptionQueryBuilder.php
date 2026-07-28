@@ -18,9 +18,15 @@ class AttributeOptionQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             AttributeOption::columnName('id'),
+            AttributeOption::columnName('attribute_id'),
             AttributeOption::columnName('created_at'),
             AttributeOptionTranslation::columnName('slug'),
             AttributeOptionTranslation::columnName('name'),
         ]);
+    }
+
+    public function filterByAttribute(int $attributeId)
+    {
+        return $this->where(AttributeOption::columnName('attribute_id'), $attributeId);
     }
 }

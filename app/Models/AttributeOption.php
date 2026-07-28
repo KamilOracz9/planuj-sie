@@ -10,7 +10,7 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 
-#[Fillable(['id', 'order_column'])]
+#[Fillable(['id', 'attribute_id', 'order_column'])]
 class AttributeOption extends BaseModel
 {
     use HasTranslations, HasCache, Sluggable;
@@ -25,6 +25,9 @@ class AttributeOption extends BaseModel
         static::bootSluggable();
         static::bootTranslations();
         static::bootCache();
+
+        static::saved(fn ($model) => static::clearAttributeSelectCache($model->attribute_id));
+        static::deleted(fn ($model) => static::clearAttributeSelectCache($model->attribute_id));
     }
 
     public static function routes()
@@ -38,6 +41,7 @@ class AttributeOption extends BaseModel
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'attribute-options'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\AttributeOptionController::class, 'index']);
+                    Route::get('/select/{attributeId}', [\App\Http\Controllers\PanelControllers\AttributeOptionController::class, 'selectByAttribute']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\AttributeOptionController::class, 'show']);
                 });
             })
@@ -47,6 +51,13 @@ class AttributeOption extends BaseModel
     private static function clearCache()
     {
         static::clearLocaleCache([CacheKeys::ATTRIBUTE_OPTIONS_LIST->value]);
+    }
+
+    private static function clearAttributeSelectCache(int $attributeId)
+    {
+        foreach (config('app.supported_locales') as $locale) {
+            cache()->forget(CacheKeys::ATTRIBUTE_OPTIONS_SELECT->value . "_$locale" . "_$attributeId");
+        }
     }
 
     public static function newQueryBuilder()

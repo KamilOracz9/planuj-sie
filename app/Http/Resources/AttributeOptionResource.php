@@ -16,6 +16,7 @@ class AttributeOptionResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'attribute_id' => $this->attribute_id,
             'name' => $this->name,
             'slug' => $this->slug,
             'value' => $this->value,

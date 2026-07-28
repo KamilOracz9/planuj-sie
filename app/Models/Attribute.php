@@ -48,6 +48,7 @@ class Attribute extends BaseModel
     private static function clearCache()
     {
         static::clearLocaleCache([CacheKeys::ATTRIBUTES_LIST->value]);
+        cache()->forget(CacheKeys::ATTRIBUTES_WITH_TYPE_LIST->value);
     }
 
     public static function newQueryBuilder()

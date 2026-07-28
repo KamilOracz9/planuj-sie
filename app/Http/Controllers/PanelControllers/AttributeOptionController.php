@@ -11,6 +11,7 @@ use App\Models\Translations\AttributeOptionTranslation;
 class AttributeOptionController extends BaseController
 {
     protected string $listCacheKey = CacheKeys::ATTRIBUTE_OPTIONS_LIST->value;
+    protected string $selectCacheKey = CacheKeys::ATTRIBUTE_OPTIONS_SELECT->value;
     protected string $resourceClass = AttributeOptionResource::class;
 
     protected mixed $model;
@@ -38,5 +39,23 @@ class AttributeOptionController extends BaseController
         $model->save();
 
         return response()->json(['id' => $model->id], 201);
+    }
+
+    public function selectByAttribute(string $locale, int $attributeId)
+    {
+        $models = cache()->remember(
+            $this->selectCacheKey . "_$locale" . "_$attributeId",
+            config('app.cache_lifetime'),
+            fn() => AttributeOption::queryBuilder()
+                ->withTranslation(AttributeOptionTranslation::class, $locale, 'id', AttributeOptionTranslation::FOREIGN_KEY, AttributeOption::class)
+                ->filterByAttribute($attributeId)
+                ->orderByOrderColumn()
+                ->select(AttributeOption::columnName('id'), AttributeOptionTranslation::columnName('name'))
+                ->get()
+                ->map(fn($item) => (array) $item)
+                ->toArray()
+        );
+
+        return response()->json($models);
     }
 }

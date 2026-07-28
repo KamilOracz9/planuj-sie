@@ -30,7 +30,11 @@ trait HasAttributes
                         'model_type'   => get_class($model),
                         'attribute_id' => $attribute['attribute_id'],
                         'data'         => json_encode(match (AttributeRepository::getAttributeType($attribute['attribute_id'])) {
-                            'text'  => ['value' => $attribute['data']],
+                            'text'        => ['value' => $attribute['data']],
+                            'number'      => ['value' => is_numeric($attribute['data']) ? $attribute['data'] + 0 : null],
+                            'boolean'     => ['value' => filter_var($attribute['data'], FILTER_VALIDATE_BOOLEAN)],
+                            'select'      => ['value' => (int) $attribute['data']],
+                            'multiselect' => ['value' => array_map('intval', (array) $attribute['data'])],
                             default => null,
                         }),
                     ]))->save();

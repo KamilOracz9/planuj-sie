@@ -63,7 +63,7 @@ class AttributeValueController extends BaseController
                     $data = json_decode($item->data, true);
 
                     $dataValue = match ($item->code) {
-                        'text' => $data['value'] ?? null,
+                        'text', 'number', 'boolean', 'select', 'multiselect' => $data['value'] ?? null,
                         default => null,
                     };
 

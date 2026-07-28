@@ -36,25 +36,25 @@ class AttributeTypeSeeder extends Seeder
             ]
         ],
         [
-            'code' => 'choice',
+            'code' => 'select',
             'pl-PL' => [
                 'name' => 'Wybór',
                 'slug' => 'wybor',
             ],
             'en-US' => [
-                'name' => 'Choice',
-                'slug' => 'choice',
+                'name' => 'Select',
+                'slug' => 'select',
             ]
         ],
         [
-            'code' => 'multiple_choice',
+            'code' => 'multiselect',
             'pl-PL' => [
                 'name' => 'Wielokrotny wybór',
                 'slug' => 'wielokrotny-wybor',
             ],
             'en-US' => [
-                'name' => 'Multiple choice',
-                'slug' => 'multiple-choice',
+                'name' => 'Multiselect',
+                'slug' => 'multiselect',
             ]
         ],
         [
@@ -66,6 +66,17 @@ class AttributeTypeSeeder extends Seeder
             'en-US' => [
                 'name' => 'Date',
                 'slug' => 'date',
+            ]
+        ],
+        [
+            'code' => 'boolean',
+            'pl-PL' => [
+                'name' => 'Prawda/Fałsz',
+                'slug' => 'prawda-falsz',
+            ],
+            'en-US' => [
+                'name' => 'Boolean',
+                'slug' => 'boolean',
             ]
         ],
     ];

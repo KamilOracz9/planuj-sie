@@ -18,6 +18,7 @@ class AttributeOptionRequest extends BaseRequest
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255'],
             'order_column' => ['nullable', 'integer'],
+            'attribute_id' => ['required', 'integer', 'exists:attributes,id'],
         ];
     }
 }

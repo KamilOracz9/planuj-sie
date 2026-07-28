@@ -15,6 +15,7 @@ enum CacheKeys: string
     case ATTRIBUTES_WITH_TYPE_LIST = 'attributes_with_type_list';
     case ATTRIBUTE_VALUES_LIST = 'attribute_values_list';
     case ATTRIBUTE_OPTIONS_LIST = 'attribute_options_list';
+    case ATTRIBUTE_OPTIONS_SELECT = 'attribute_options_select';
     case ATTRIBUTE_TYPES_LIST = 'attribute_types_list';
 
     case CATEGORIES_SELECT = 'categories_select';
