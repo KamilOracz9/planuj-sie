@@ -27,6 +27,9 @@ class VariantRequest extends BaseRequest
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(VariantTranslation::tableName(), 'slug')->ignore($productId, VariantTranslation::FOREIGN_KEY)],
             'product_id' => ['required', 'integer', Rule::exists(Product::tableName(), 'id')],
+            'attributes' => ['nullable', 'array'],
+            'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
+            'attributes.*.data' => ['required'],
         ];
     }
 }

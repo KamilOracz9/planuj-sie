@@ -47,9 +47,13 @@ class Brand extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
         static::clearLocaleCache([CacheKeys::BRANDS_LIST->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::BRANDS_LIST->value], $model->id);
+        }
     }
 
     public static function newQueryBuilder()

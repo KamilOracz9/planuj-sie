@@ -22,4 +22,5 @@ enum CacheKeys: string
     case PRODUCTS_SELECT = 'products_select';
     case ATTRIBUTE_TYPES_SELECT = 'attribute_types_select';
     case ATTRIBUTES_SELECT = 'attributes_select';
+    case ATTRIBUTE_VALUES_SELECT_BY_MODEL = 'attribute_values_select_by_model';
 }

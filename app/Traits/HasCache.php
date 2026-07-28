@@ -6,12 +6,12 @@ trait HasCache
 {
     protected static function bootCache()
     {
-        static::saved(function () {
-            self::clearCache();
+        static::saved(function ($model) {
+            static::clearCache($model);
         });
 
-        static::deleted(function () {
-            self::clearCache();
+        static::deleted(function ($model) {
+            static::clearCache($model);
         });
     }
 
@@ -20,6 +20,15 @@ trait HasCache
         foreach (config('app.supported_locales') as $locale) {
             foreach ($cacheKeys as $key) {
                 cache()->forget($key . "_$locale");
+            }
+        }
+    }
+
+    protected static function clearShowCache(array $cacheKeys, int|string $id)
+    {
+        foreach (config('app.supported_locales') as $locale) {
+            foreach ($cacheKeys as $key) {
+                cache()->forget($key . "_show_{$locale}_{$id}");
             }
         }
     }

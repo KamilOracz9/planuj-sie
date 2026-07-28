@@ -26,6 +26,9 @@ class CategoryRequest extends BaseRequest
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(CategoryTranslation::tableName(), 'slug')->ignore($categoryId, CategoryTranslation::FOREIGN_KEY)],
             'parent_id' => ['nullable', 'integer', Rule::exists(Category::tableName(), 'id')],
+            'attributes' => ['nullable', 'array'],
+            'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
+            'attributes.*.data' => ['required'],
         ];
     }
 }

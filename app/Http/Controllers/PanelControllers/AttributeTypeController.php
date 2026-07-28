@@ -21,4 +21,24 @@ class AttributeTypeController extends BaseController
         $this->model = new AttributeType;
         $this->modelTranslation = new AttributeTypeTranslation;
     }
+
+    public function select(string $locale)
+    {
+        $models = cache()->remember(
+            $this->selectCacheKey . "_$locale",
+            config('app.cache_lifetime'),
+            fn() => AttributeType::queryBuilder()
+                ->withTranslation(AttributeTypeTranslation::class, $locale, 'id', AttributeTypeTranslation::FOREIGN_KEY, AttributeType::class)
+                ->select(
+                    AttributeType::columnName('id'),
+                    AttributeTypeTranslation::columnName('name'),
+                    AttributeType::columnName('code'),
+                )
+                ->get()
+                ->map(fn($item) => (array) $item)
+                ->toArray()
+        );
+
+        return response()->json($models);
+    }
 }

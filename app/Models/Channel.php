@@ -44,9 +44,13 @@ class Channel extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
         static::clearLocaleCache([CacheKeys::CHANNELS_LIST->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::CHANNELS_LIST->value], $model->id);
+        }
     }
 
     public static function newQueryBuilder()

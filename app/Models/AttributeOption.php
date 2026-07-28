@@ -26,7 +26,13 @@ class AttributeOption extends BaseModel
         static::bootTranslations();
         static::bootCache();
 
-        static::saved(fn ($model) => static::clearAttributeSelectCache($model->attribute_id));
+        static::saved(function ($model) {
+            static::clearAttributeSelectCache($model->attribute_id);
+
+            if ($model->wasChanged('attribute_id') && $model->getOriginal('attribute_id')) {
+                static::clearAttributeSelectCache($model->getOriginal('attribute_id'));
+            }
+        });
         static::deleted(fn ($model) => static::clearAttributeSelectCache($model->attribute_id));
     }
 
@@ -48,9 +54,13 @@ class AttributeOption extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
         static::clearLocaleCache([CacheKeys::ATTRIBUTE_OPTIONS_LIST->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::ATTRIBUTE_OPTIONS_LIST->value], $model->id);
+        }
     }
 
     private static function clearAttributeSelectCache(int $attributeId)

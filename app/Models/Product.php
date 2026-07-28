@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CacheKeys;
 use App\QueryBuilders\ProductQueryBuilder;
+use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
 use App\Traits\Sluggable;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 #[Fillable(['id'])]
 class Product extends BaseModel
 {
-    use HasTranslations, HasCache, Sluggable;
+    use HasTranslations, HasCache, Sluggable, HasAttributes;
 
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
@@ -24,6 +25,7 @@ class Product extends BaseModel
 
         static::bootSluggable();
         static::bootTranslations();
+        static::bootAttributes();
         static::bootCache();
     }
 
@@ -45,9 +47,13 @@ class Product extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
-        static::clearLocaleCache([CacheKeys::PRODUCTS_LIST->value]);
+        static::clearLocaleCache([CacheKeys::PRODUCTS_LIST->value, CacheKeys::PRODUCTS_SELECT->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::PRODUCTS_LIST->value], $model->id);
+        }
     }
 
     public static function newQueryBuilder()

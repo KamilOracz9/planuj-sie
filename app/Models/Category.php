@@ -49,10 +49,14 @@ class Category extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
         static::clearLocaleCache([CacheKeys::CATEGORIES_LIST->value]);
         static::clearLocaleCache([CacheKeys::CATEGORIES_SELECT->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::CATEGORIES_LIST->value], $model->id);
+        }
     }
 
     public static function newQueryBuilder()

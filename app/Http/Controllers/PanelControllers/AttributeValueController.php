@@ -11,7 +11,7 @@ use App\Models\AttributeValue;
 class AttributeValueController extends BaseController
 {
     protected string $listCacheKey = CacheKeys::ATTRIBUTE_VALUES_LIST->value;
-    protected string $selectCacheKey = CacheKeys::ATTRIBUTES_SELECT->value;
+    protected string $selectCacheKey = CacheKeys::ATTRIBUTE_VALUES_SELECT_BY_MODEL->value;
     protected string $resourceClass = AttributeValueResource::class;
 
     protected mixed $model;
@@ -63,7 +63,7 @@ class AttributeValueController extends BaseController
                     $data = json_decode($item->data, true);
 
                     $dataValue = match ($item->code) {
-                        'text', 'number', 'boolean', 'select', 'multiselect' => $data['value'] ?? null,
+                        'text', 'number', 'boolean', 'select', 'multiselect', 'date' => $data['value'] ?? null,
                         default => null,
                     };
 

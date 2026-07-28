@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CacheKeys;
 use App\QueryBuilders\VariantQueryBuilder;
+use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
 use App\Traits\Sluggable;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 #[Fillable(['id', 'product_id'])]
 class Variant extends BaseModel
 {
-    use HasTranslations, HasCache, Sluggable;
+    use HasTranslations, HasCache, Sluggable, HasAttributes;
 
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
@@ -24,6 +25,7 @@ class Variant extends BaseModel
 
         static::bootSluggable();
         static::bootTranslations();
+        static::bootAttributes();
         static::bootCache();
     }
 
@@ -44,9 +46,13 @@ class Variant extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
         static::clearLocaleCache([CacheKeys::VARIANTS_LIST->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::VARIANTS_LIST->value], $model->id);
+        }
     }
 
     public static function newQueryBuilder()

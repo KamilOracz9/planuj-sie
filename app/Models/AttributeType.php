@@ -39,9 +39,13 @@ class AttributeType extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
-        static::clearLocaleCache([CacheKeys::ATTRIBUTE_TYPES_LIST->value]);
+        static::clearLocaleCache([CacheKeys::ATTRIBUTE_TYPES_LIST->value, CacheKeys::ATTRIBUTE_TYPES_SELECT->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::ATTRIBUTE_TYPES_LIST->value], $model->id);
+        }
     }
 
     public static function newQueryBuilder()

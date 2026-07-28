@@ -41,9 +41,13 @@ class Locale extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
         static::clearLocaleCache([CacheKeys::LOCALES_LIST->value]);
+
+        if ($model) {
+            static::clearShowCache([CacheKeys::LOCALES_LIST->value], $model->id);
+        }
     }
 
     public static function newQueryBuilder()

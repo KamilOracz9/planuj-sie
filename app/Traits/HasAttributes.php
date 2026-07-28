@@ -5,10 +5,7 @@ namespace App\Traits;
 use App\Http\Repositories\AttributeRepository;
 use App\Enums\CacheKeys;
 use App\Models\AttributeValue;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 trait HasAttributes
 {
@@ -35,21 +32,28 @@ trait HasAttributes
                             'boolean'     => ['value' => filter_var($attribute['data'], FILTER_VALIDATE_BOOLEAN)],
                             'select'      => ['value' => (int) $attribute['data']],
                             'multiselect' => ['value' => array_map('intval', (array) $attribute['data'])],
+                            'date'        => ['value' => $attribute['data']],
                             default => null,
                         }),
                     ]))->save();
                 }
             });
 
-
-            foreach (config('app.supported_locales') as $locale) {
-                cache()->forget(CacheKeys::ATTRIBUTES_SELECT->value . "_$locale" . "_" . $model::modelName() . "_$model->id");
-            }
+            static::clearAttributeValuesSelectCache($model);
         });
 
         static::deleted(function ($model) {
             $model->deleteAttributeValues();
+
+            static::clearAttributeValuesSelectCache($model);
         });
+    }
+
+    private static function clearAttributeValuesSelectCache($model)
+    {
+        foreach (config('app.supported_locales') as $locale) {
+            cache()->forget(CacheKeys::ATTRIBUTE_VALUES_SELECT_BY_MODEL->value . "_$locale" . "_" . $model::modelName() . "_$model->id");
+        }
     }
 
     public function attributeValues()

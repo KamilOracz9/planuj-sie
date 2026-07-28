@@ -25,6 +25,9 @@ class ProductRequest extends BaseRequest
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(ProductTranslation::tableName(), 'slug')->ignore($productId, ProductTranslation::FOREIGN_KEY)],
+            'attributes' => ['nullable', 'array'],
+            'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
+            'attributes.*.data' => ['required'],
         ];
     }
 }

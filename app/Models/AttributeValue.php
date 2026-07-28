@@ -7,6 +7,7 @@ use App\QueryBuilders\AttributeValueQueryBuilder;
 use App\Traits\HasCache;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 #[Fillable(['id', 'attribute_id', 'data', 'order_column', 'model_id', 'model_type'])]
 class AttributeValue extends BaseModel
@@ -39,9 +40,33 @@ class AttributeValue extends BaseModel
         ];
     }
 
-    private static function clearCache()
+    private static function clearCache($model = null)
     {
         static::clearLocaleCache([CacheKeys::ATTRIBUTE_VALUES_LIST->value]);
+
+        if (!$model) {
+            return;
+        }
+
+        static::clearShowCache([CacheKeys::ATTRIBUTE_VALUES_LIST->value], $model->id);
+        static::clearSelectByModelCache($model->model_type, $model->model_id);
+
+        if ($model->wasChanged(['model_type', 'model_id'])) {
+            static::clearSelectByModelCache($model->getOriginal('model_type'), $model->getOriginal('model_id'));
+        }
+    }
+
+    private static function clearSelectByModelCache(?string $modelType, mixed $modelId)
+    {
+        if (!$modelType || !$modelId) {
+            return;
+        }
+
+        $modelName = Str::snake(class_basename($modelType));
+
+        foreach (config('app.supported_locales') as $locale) {
+            cache()->forget(CacheKeys::ATTRIBUTE_VALUES_SELECT_BY_MODEL->value . "_$locale" . "_{$modelName}_{$modelId}");
+        }
     }
 
     public static function newQueryBuilder()

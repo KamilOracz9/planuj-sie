@@ -64,14 +64,38 @@ abstract class BaseController extends Controller
 
     public function show(string $locale, int $id)
     {
-        $model = $this->model::queryBuilder()
-            ->where($this->model::columnName('id'), $id)
-            ->first();
+        $model = cache()->remember(
+            "{$this->listCacheKey}_show_{$locale}_{$id}",
+            config('app.cache_lifetime'),
+            function () use ($id) {
+                $model = $this->model::queryBuilder()
+                    ->where($this->model::columnName('id'), $id)
+                    ->first();
 
-        if ($this->modelTranslation) $model->translations = DB::table($this->modelTranslation::tableName())
-            ->where($this->modelTranslation::columnName($this->modelTranslation::FOREIGN_KEY), $id)
-            ->get()
-            ->keyBy('locale');
+                if (!$model) {
+                    return null;
+                }
+
+                // Cache values are unserialized with `allowed_classes: false` (see
+                // config/cache.php), so only plain arrays/scalars survive the round-trip —
+                // objects come back as `__PHP_Incomplete_Class`. Cast to array like
+                // index()/select() already do before handing anything to the cache.
+                $model = (array) $model;
+
+                if ($this->modelTranslation) $model['translations'] = DB::table($this->modelTranslation::tableName())
+                    ->where($this->modelTranslation::columnName($this->modelTranslation::FOREIGN_KEY), $id)
+                    ->get()
+                    ->keyBy('locale')
+                    ->map(fn($item) => (array) $item)
+                    ->toArray();
+
+                return $model;
+            }
+        );
+
+        if (!$model) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
 
         return response()->json($model);
     }
