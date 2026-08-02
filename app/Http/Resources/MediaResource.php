@@ -20,6 +20,7 @@ class MediaResource extends JsonResource
             'mime_type' => $this->mime_type,
             'size' => $this->size,
             'order_column' => $this->order_column,
+            'folder_id' => $this->getCustomProperty('folder_id'),
             'url' => $this->getUrl(),
             'conversions' => collect($this->getGeneratedConversions())
                 ->filter()

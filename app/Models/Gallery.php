@@ -43,12 +43,20 @@ class Gallery extends BaseModel implements HasMedia
             Route::group(['prefix' => 'gallery'], function () {
                 Route::get('/', [\App\Http\Controllers\PanelControllers\GalleryController::class, 'index']);
                 Route::post('/', [\App\Http\Controllers\PanelControllers\GalleryController::class, 'store']);
+                Route::post('/{mediaId}/move', [\App\Http\Controllers\PanelControllers\GalleryController::class, 'move']);
                 Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\GalleryController::class, 'destroy']);
             }),
             Route::group(['prefix' => 'documents'], function () {
                 Route::get('/', [\App\Http\Controllers\PanelControllers\DocumentController::class, 'index']);
                 Route::post('/', [\App\Http\Controllers\PanelControllers\DocumentController::class, 'store']);
+                Route::post('/{mediaId}/move', [\App\Http\Controllers\PanelControllers\DocumentController::class, 'move']);
                 Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\DocumentController::class, 'destroy']);
+            }),
+            Route::group(['prefix' => 'folders/{type}'], function () {
+                Route::get('/', [\App\Http\Controllers\PanelControllers\MediaFolderController::class, 'index']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\MediaFolderController::class, 'store']);
+                Route::put('/{id}', [\App\Http\Controllers\PanelControllers\MediaFolderController::class, 'update']);
+                Route::delete('/{id}', [\App\Http\Controllers\PanelControllers\MediaFolderController::class, 'destroy']);
             }),
         ];
     }
