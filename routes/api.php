@@ -9,6 +9,7 @@ use App\Models\AttributeType;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Channel;
+use App\Models\Gallery;
 use App\Models\Locale;
 use App\Models\Product;
 use App\Models\User;
@@ -32,5 +33,6 @@ Route::group(['middleware' => 'api'], function () {
         AttributeValue::routes();
         AttributeOption::routes();
         AttributeType::routes();
+        Gallery::routes();
     // });
 });

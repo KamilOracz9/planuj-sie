@@ -7,14 +7,18 @@ use App\QueryBuilders\CategoryQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
+use App\Traits\Media\HasDocumentMedia;
+use App\Traits\Media\HasIconMedia;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 #[Fillable(['id', 'parent_id'])]
-class Category extends BaseModel
+class Category extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasAttributes;
+    use HasTranslations, HasCache, Sluggable, HasAttributes, HasIconMedia, HasDocumentMedia;
 
     const PARENT_CATEGORY_TRANSLATIONTABLE_ALIAS = 'parent_category_translations';
 
@@ -31,6 +35,17 @@ class Category extends BaseModel
         static::bootCache();
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this->registerIconCollection();
+        $this->registerDocumentCollection();
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->registerIconConversions();
+    }
+
     public static function routes()
     {
         return [
@@ -45,6 +60,13 @@ class Category extends BaseModel
                     Route::get('/select', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'select']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\CategoryController::class, 'show']);
                 });
+            }),
+            Route::group(['prefix' => 'categories/{id}/media'], function () {
+                Route::get('/', [\App\Http\Controllers\PanelControllers\Media\CategoryMediaController::class, 'index']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\Media\CategoryMediaController::class, 'store']);
+                Route::post('/attach', [\App\Http\Controllers\PanelControllers\Media\CategoryMediaController::class, 'attach']);
+                Route::post('/reorder', [\App\Http\Controllers\PanelControllers\Media\CategoryMediaController::class, 'reorder']);
+                Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\Media\CategoryMediaController::class, 'destroy']);
             })
         ];
     }

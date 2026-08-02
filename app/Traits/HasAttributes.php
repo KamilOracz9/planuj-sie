@@ -19,23 +19,38 @@ trait HasAttributes
             }
 
             DB::transaction(function () use ($model, $attributes) {
-                $model->deleteAttributeValues();
+                // Keyed by attribute_id (update-or-create) rather than delete+recreate, so an
+                // AttributeValue keeps the same id — and any media attached to it — across edits.
+                $submittedAttributeIds = array_map(fn($attribute) => (int) $attribute['attribute_id'], $attributes);
+
+                // Deleted one-by-one (not a mass ->delete()) so each AttributeValue's own
+                // `deleting` event fires and its attached media is cleaned up too.
+                AttributeValue::query()
+                    ->where('model_type', get_class($model))
+                    ->where('model_id', $model->id)
+                    ->whereNotIn('attribute_id', $submittedAttributeIds)
+                    ->get()
+                    ->each(fn(AttributeValue $value) => $value->delete());
 
                 foreach ($attributes as $attribute) {
-                    (new AttributeValue([
-                        'model_id'     => $model->id,
-                        'model_type'   => get_class($model),
-                        'attribute_id' => $attribute['attribute_id'],
-                        'data'         => json_encode(match (AttributeRepository::getAttributeType($attribute['attribute_id'])) {
-                            'text'        => ['value' => $attribute['data']],
-                            'number'      => ['value' => is_numeric($attribute['data']) ? $attribute['data'] + 0 : null],
-                            'boolean'     => ['value' => filter_var($attribute['data'], FILTER_VALIDATE_BOOLEAN)],
-                            'select'      => ['value' => (int) $attribute['data']],
-                            'multiselect' => ['value' => array_map('intval', (array) $attribute['data'])],
-                            'date'        => ['value' => $attribute['data']],
-                            default => null,
-                        }),
-                    ]))->save();
+                    AttributeValue::query()->updateOrCreate(
+                        [
+                            'model_id'     => $model->id,
+                            'model_type'   => get_class($model),
+                            'attribute_id' => $attribute['attribute_id'],
+                        ],
+                        [
+                            'data' => json_encode(match (AttributeRepository::getAttributeType($attribute['attribute_id'])) {
+                                'text'        => ['value' => $attribute['data']],
+                                'number'      => ['value' => is_numeric($attribute['data']) ? $attribute['data'] + 0 : null],
+                                'boolean'     => ['value' => filter_var($attribute['data'], FILTER_VALIDATE_BOOLEAN)],
+                                'select'      => ['value' => (int) $attribute['data']],
+                                'multiselect' => ['value' => array_map('intval', (array) $attribute['data'])],
+                                'date'        => ['value' => $attribute['data']],
+                                default => null,
+                            }),
+                        ]
+                    );
                 }
             });
 
@@ -70,7 +85,8 @@ trait HasAttributes
             AttributeValue::query()
                 ->where('model_type', get_class($this))
                 ->where('model_id', $this->id)
-                ->delete();
+                ->get()
+                ->each(fn(AttributeValue $value) => $value->delete());
         });
     }
 }

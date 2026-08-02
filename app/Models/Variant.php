@@ -7,14 +7,18 @@ use App\QueryBuilders\VariantQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
+use App\Traits\Media\HasDocumentMedia;
+use App\Traits\Media\HasGalleryMedia;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 #[Fillable(['id', 'product_id'])]
-class Variant extends BaseModel
+class Variant extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasAttributes;
+    use HasTranslations, HasCache, Sluggable, HasAttributes, HasGalleryMedia, HasDocumentMedia;
 
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
@@ -27,6 +31,17 @@ class Variant extends BaseModel
         static::bootTranslations();
         static::bootAttributes();
         static::bootCache();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->registerGalleryCollections();
+        $this->registerDocumentCollection();
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->registerGalleryConversions();
     }
 
     public static function routes()
@@ -42,6 +57,13 @@ class Variant extends BaseModel
                     Route::get('/', [\App\Http\Controllers\PanelControllers\VariantController::class, 'index']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\VariantController::class, 'show']);
                 });
+            }),
+            Route::group(['prefix' => 'variants/{id}/media'], function () {
+                Route::get('/', [\App\Http\Controllers\PanelControllers\Media\VariantMediaController::class, 'index']);
+                Route::post('/', [\App\Http\Controllers\PanelControllers\Media\VariantMediaController::class, 'store']);
+                Route::post('/attach', [\App\Http\Controllers\PanelControllers\Media\VariantMediaController::class, 'attach']);
+                Route::post('/reorder', [\App\Http\Controllers\PanelControllers\Media\VariantMediaController::class, 'reorder']);
+                Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\Media\VariantMediaController::class, 'destroy']);
             })
         ];
     }
