@@ -11,6 +11,7 @@ use App\Models\Translations\ChannelTranslation;
 class ChannelController extends BaseController
 {
     protected string $listCacheKey = CacheKeys::CHANNELS_LIST->value;
+    protected string $selectCacheKey = CacheKeys::CHANNELS_SELECT->value;
     protected string $resourceClass = ChannelResource::class;
 
     protected mixed $model;

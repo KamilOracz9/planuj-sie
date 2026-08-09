@@ -2,7 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Brand;
+use App\Models\Channel;
+use App\Models\Collection;
+use App\Models\Currency;
 use App\Models\Product;
+use App\Models\Series;
 use App\Models\Translations\ProductTranslation;
 use Illuminate\Validation\Rule;
 
@@ -25,9 +30,25 @@ class ProductRequest extends BaseRequest
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(ProductTranslation::tableName(), 'slug')->ignore($productId, ProductTranslation::FOREIGN_KEY)],
+            'brand_id' => ['nullable', 'integer', Rule::exists(Brand::tableName(), 'id')],
+            'series_id' => ['nullable', 'integer', Rule::exists(Series::tableName(), 'id')],
+            'collections' => ['nullable', 'array'],
+            'collections.*' => ['integer', Rule::exists(Collection::tableName(), 'id')],
             'attributes' => ['nullable', 'array'],
             'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
             'attributes.*.data' => ['required'],
+            'channels' => ['nullable', 'array'],
+            'channels.*.channel_id' => ['required', 'integer', Rule::exists(Channel::tableName(), 'id')],
+            'channels.*.is_enabled' => ['required', 'boolean'],
+            'prices' => ['nullable', 'array', function ($attribute, $value, $fail) {
+                $pairs = array_map(fn($p) => ($p['channel_id'] ?? null) . '-' . ($p['currency_id'] ?? null), $value ?? []);
+                if (count($pairs) !== count(array_unique($pairs))) {
+                    $fail('Duplicate channel/currency price rows are not allowed.');
+                }
+            }],
+            'prices.*.channel_id' => ['required', 'integer', Rule::exists(Channel::tableName(), 'id')],
+            'prices.*.currency_id' => ['required', 'integer', Rule::exists(Currency::tableName(), 'id')],
+            'prices.*.amount' => ['required', 'numeric', 'min:0', 'regex:/^\d+(\.\d{1,2})?$/'],
         ];
     }
 }

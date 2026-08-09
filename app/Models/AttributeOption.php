@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\CacheKeys;
 use App\QueryBuilders\AttributeOptionQueryBuilder;
 use App\Traits\HasCache;
+use App\Traits\HasPrices;
 use App\Traits\HasTranslations;
 use App\Traits\Media\HasIconMedia;
 use App\Traits\Sluggable;
@@ -15,7 +16,7 @@ use Spatie\MediaLibrary\HasMedia;
 #[Fillable(['id', 'attribute_id', 'order_column'])]
 class AttributeOption extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasIconMedia;
+    use HasTranslations, HasCache, Sluggable, HasIconMedia, HasPrices;
 
     public array $translatable = ['name', 'slug'];
     public string $sluggable = 'name';
@@ -26,6 +27,7 @@ class AttributeOption extends BaseModel implements HasMedia
 
         static::bootSluggable();
         static::bootTranslations();
+        static::bootPrices();
         static::bootCache();
 
         static::saved(function ($model) {

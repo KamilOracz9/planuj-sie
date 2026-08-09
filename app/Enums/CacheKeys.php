@@ -17,10 +17,20 @@ enum CacheKeys: string
     case ATTRIBUTE_OPTIONS_LIST = 'attribute_options_list';
     case ATTRIBUTE_OPTIONS_SELECT = 'attribute_options_select';
     case ATTRIBUTE_TYPES_LIST = 'attribute_types_list';
+    case SERIES_LIST = 'series_list';
+    case COLLECTIONS_LIST = 'collections_list';
+    case CURRENCIES_LIST = 'currencies_list';
 
     case CATEGORIES_SELECT = 'categories_select';
     case PRODUCTS_SELECT = 'products_select';
     case ATTRIBUTE_TYPES_SELECT = 'attribute_types_select';
     case ATTRIBUTES_SELECT = 'attributes_select';
     case ATTRIBUTE_VALUES_SELECT_BY_MODEL = 'attribute_values_select_by_model';
+    case BRANDS_SELECT = 'brands_select';
+    case CHANNELS_SELECT = 'channels_select';
+    case SERIES_SELECT = 'series_select';
+    case COLLECTIONS_SELECT = 'collections_select';
+    case CHANNEL_VISIBILITIES_SELECT_BY_MODEL = 'channel_visibilities_select_by_model';
+    case CURRENCIES_SELECT = 'currencies_select';
+    case PRICES_SELECT_BY_MODEL = 'prices_select_by_model';
 }

@@ -9,9 +9,14 @@ use App\Models\AttributeType;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Channel;
+use App\Models\ChannelVisibility;
+use App\Models\Collection;
+use App\Models\Currency;
 use App\Models\Gallery;
 use App\Models\Locale;
+use App\Models\Price;
 use App\Models\Product;
+use App\Models\Series;
 use App\Models\User;
 use App\Models\Variant;
 
@@ -24,7 +29,12 @@ Route::group(['middleware' => 'api'], function () {
 
         User::routes();
         Brand::routes();
+        Series::routes();
+        Collection::routes();
         Channel::routes();
+        ChannelVisibility::routes();
+        Currency::routes();
+        Price::routes();
         Locale::routes();
         Category::routes();
         Product::routes();

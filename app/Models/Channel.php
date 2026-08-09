@@ -38,6 +38,7 @@ class Channel extends BaseModel
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'channels'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'index']);
+                    Route::get('/select', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'select']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\ChannelController::class, 'show']);
                 });
             })
@@ -46,7 +47,7 @@ class Channel extends BaseModel
 
     private static function clearCache($model = null)
     {
-        static::clearLocaleCache([CacheKeys::CHANNELS_LIST->value]);
+        static::clearLocaleCache([CacheKeys::CHANNELS_LIST->value, CacheKeys::CHANNELS_SELECT->value]);
 
         if ($model) {
             static::clearShowCache([CacheKeys::CHANNELS_LIST->value], $model->id);

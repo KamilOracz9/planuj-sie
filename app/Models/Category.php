@@ -6,11 +6,13 @@ use App\Enums\CacheKeys;
 use App\QueryBuilders\CategoryQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
+use App\Traits\HasChannelVisibility;
 use App\Traits\HasTranslations;
 use App\Traits\Media\HasDocumentMedia;
 use App\Traits\Media\HasIconMedia;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Route;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -18,7 +20,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 #[Fillable(['id', 'parent_id'])]
 class Category extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasAttributes, HasIconMedia, HasDocumentMedia;
+    use HasTranslations, HasCache, Sluggable, HasAttributes, HasChannelVisibility, HasIconMedia, HasDocumentMedia;
 
     const PARENT_CATEGORY_TRANSLATIONTABLE_ALIAS = 'parent_category_translations';
 
@@ -32,7 +34,18 @@ class Category extends BaseModel implements HasMedia
         static::bootSluggable();
         static::bootTranslations();
         static::bootAttributes();
+        static::bootChannelVisibility();
         static::bootCache();
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function ancestorGroupsForVisibility(): array
+    {
+        return $this->parent_id ? [[$this->parent]] : [];
     }
 
     public function registerMediaCollections(): void

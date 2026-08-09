@@ -6,6 +6,7 @@ use App\Enums\CacheKeys;
 use App\QueryBuilders\VariantQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
+use App\Traits\HasPrices;
 use App\Traits\HasTranslations;
 use App\Traits\Media\HasDocumentMedia;
 use App\Traits\Media\HasGalleryMedia;
@@ -18,7 +19,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 #[Fillable(['id', 'product_id'])]
 class Variant extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasAttributes, HasGalleryMedia, HasDocumentMedia;
+    use HasTranslations, HasCache, Sluggable, HasAttributes, HasPrices, HasGalleryMedia, HasDocumentMedia;
 
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
@@ -30,6 +31,7 @@ class Variant extends BaseModel implements HasMedia
         static::bootSluggable();
         static::bootTranslations();
         static::bootAttributes();
+        static::bootPrices();
         static::bootCache();
     }
 

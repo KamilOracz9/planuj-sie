@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Brand;
+use App\Models\Channel;
 use Illuminate\Validation\Rule;
 
 class BrandRequest extends BaseRequest
@@ -23,6 +24,9 @@ class BrandRequest extends BaseRequest
             'attributes' => ['nullable', 'array'],
             'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
             'attributes.*.data' => ['required'],
+            'channels' => ['nullable', 'array'],
+            'channels.*.channel_id' => ['required', 'integer', Rule::exists(Channel::tableName(), 'id')],
+            'channels.*.is_enabled' => ['required', 'boolean'],
         ];
     }
 }

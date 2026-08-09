@@ -2,31 +2,25 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Category;
 use App\Models\Channel;
-use App\Models\Translations\CategoryTranslation;
+use App\Models\Collection;
 use Illuminate\Validation\Rule;
 
-class CategoryRequest extends BaseRequest
+class CollectionRequest extends BaseRequest
 {
-    protected string $modelClass = Category::class;
+    protected string $modelClass = Collection::class;
 
     public function rules(): array
     {
-        $categoryId = $this->route('id');
+        $collectionId = $this->route('id');
 
         return [
             'name' => ['required', 'array'],
             'name.pl-PL' => ['required', 'string', 'max:255'],
             'name.*' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'array'],
-            'description.*' => ['nullable', 'string', 'max:500'],
-            'short_description' => ['nullable', 'array'],
-            'short_description.*' => ['nullable', 'string', 'max:500'],
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
-            'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(CategoryTranslation::tableName(), 'slug')->ignore($categoryId, CategoryTranslation::FOREIGN_KEY)],
-            'parent_id' => ['nullable', 'integer', Rule::exists(Category::tableName(), 'id')],
+            'slug.*' => ['nullable', 'string', 'max:255', Rule::unique('collection_translations', 'slug')->ignore($collectionId, 'collection_id')],
             'attributes' => ['nullable', 'array'],
             'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
             'attributes.*.data' => ['required'],

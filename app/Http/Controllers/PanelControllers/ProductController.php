@@ -7,6 +7,7 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\Translations\ProductTranslation;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends BaseController
 {
@@ -39,5 +40,20 @@ class ProductController extends BaseController
         $model->save();
 
         return response()->json(['id' => $model->id], 201);
+    }
+
+    public function show(string $locale, int $id)
+    {
+        $response = parent::show($locale, $id);
+        $data = $response->getData(true);
+
+        if (isset($data['id'])) {
+            $data['collection_ids'] = DB::table('product_collection')
+                ->where('product_id', $data['id'])
+                ->pluck('collection_id')
+                ->all();
+        }
+
+        return response()->json($data);
     }
 }

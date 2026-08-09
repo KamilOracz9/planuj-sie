@@ -6,6 +6,7 @@ use App\Enums\CacheKeys;
 use App\QueryBuilders\BrandQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
+use App\Traits\HasChannelVisibility;
 use App\Traits\HasTranslations;
 use App\Traits\Media\HasDocumentMedia;
 use App\Traits\Media\HasLogoMedia;
@@ -19,7 +20,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 #[Fillable(['id'])]
 class Brand extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasFactory, HasAttributes, HasLogoMedia, HasDocumentMedia;
+    use HasTranslations, HasCache, Sluggable, HasFactory, HasAttributes, HasChannelVisibility, HasLogoMedia, HasDocumentMedia;
 
     public array $translatable = ['name', 'slug'];
     public string $sluggable = 'name';
@@ -31,6 +32,7 @@ class Brand extends BaseModel implements HasMedia
         static::bootSluggable();
         static::bootTranslations();
         static::bootAttributes();
+        static::bootChannelVisibility();
         static::bootCache();
     }
 
@@ -56,6 +58,7 @@ class Brand extends BaseModel implements HasMedia
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'brands'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\BrandController::class, 'index']);
+                    Route::get('/select', [\App\Http\Controllers\PanelControllers\BrandController::class, 'select']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\BrandController::class, 'show']);
                 });
             }),
@@ -71,7 +74,7 @@ class Brand extends BaseModel implements HasMedia
 
     private static function clearCache($model = null)
     {
-        static::clearLocaleCache([CacheKeys::BRANDS_LIST->value]);
+        static::clearLocaleCache([CacheKeys::BRANDS_LIST->value, CacheKeys::BRANDS_SELECT->value]);
 
         if ($model) {
             static::clearShowCache([CacheKeys::BRANDS_LIST->value], $model->id);

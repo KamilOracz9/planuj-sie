@@ -11,6 +11,7 @@ use App\Models\Translations\BrandTranslation;
 class BrandController extends BaseController
 {
     protected string $listCacheKey = CacheKeys::BRANDS_LIST->value;
+    protected string $selectCacheKey = CacheKeys::BRANDS_SELECT->value;
     protected string $resourceClass = BrandResource::class;
 
     protected mixed $model;

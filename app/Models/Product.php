@@ -6,19 +6,23 @@ use App\Enums\CacheKeys;
 use App\QueryBuilders\ProductQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
+use App\Traits\HasChannelVisibility;
+use App\Traits\HasCollections;
+use App\Traits\HasPrices;
 use App\Traits\HasTranslations;
 use App\Traits\Media\HasDocumentMedia;
 use App\Traits\Media\HasGalleryMedia;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Route;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-#[Fillable(['id'])]
+#[Fillable(['id', 'brand_id', 'series_id'])]
 class Product extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasAttributes, HasGalleryMedia, HasDocumentMedia;
+    use HasTranslations, HasCache, Sluggable, HasAttributes, HasCollections, HasChannelVisibility, HasPrices, HasGalleryMedia, HasDocumentMedia;
 
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
@@ -30,7 +34,39 @@ class Product extends BaseModel implements HasMedia
         static::bootSluggable();
         static::bootTranslations();
         static::bootAttributes();
+        static::bootCollections();
+        static::bootChannelVisibility();
+        static::bootPrices();
         static::bootCache();
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function series(): BelongsTo
+    {
+        return $this->belongsTo(Series::class);
+    }
+
+    public function ancestorGroupsForVisibility(): array
+    {
+        $groups = [];
+
+        if ($this->brand_id) {
+            $groups[] = [$this->brand];
+        }
+
+        if ($this->series_id) {
+            $groups[] = [$this->series];
+        }
+
+        if ($this->collections->isNotEmpty()) {
+            $groups[] = $this->collections->all();
+        }
+
+        return $groups;
     }
 
     public function registerMediaCollections(): void
