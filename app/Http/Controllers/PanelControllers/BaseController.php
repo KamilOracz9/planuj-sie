@@ -43,8 +43,14 @@ abstract class BaseController extends Controller
 
     public function index(string $locale)
     {
+        // Optional global "active channel" scope (see panel's ChannelSwitcher) -
+        // filterByChannel() is a safe no-op for models without channel
+        // visibility, so this is always applied rather than conditioned on
+        // which controller this is.
+        $channelId = request()->integer('channel_id') ?: null;
+
         $data = cache()->remember(
-            $this->listCacheKey . "_$locale",
+            $this->listCacheKey . "_$locale" . ($channelId ? "_channel_$channelId" : ''),
             config('app.cache_lifetime'),
             fn() => $this->model::queryBuilder()
                 ->when(
@@ -52,6 +58,7 @@ abstract class BaseController extends Controller
                     fn($query) => $query
                         ->withTranslation($this->modelTranslation::class, $locale, 'id', $this->modelTranslation::FOREIGN_KEY, $this->model::class)
                 )
+                ->filterByChannel($channelId)
                 ->listExtended($locale)
                 ->listSelect()
                 ->get()

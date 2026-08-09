@@ -83,4 +83,31 @@ class BaseQueryBuilder extends Builder
     {
         return $this;
     }
+
+    // Excludes rows explicitly disabled for $channelId via HasChannelVisibility
+    // (channel_visibilities.is_enabled = false) - default-visible-if-no-row,
+    // matching HasChannelVisibility::isEnabledForChannel()'s own fallback.
+    // Deliberately own-level only (does not replicate the ancestor-group
+    // cascade from HasChannelVisibility::isVisibleInChannel() - that exists
+    // for storefront rendering; for this admin list filter, a Product should
+    // stay visible/manageable even if its Brand happens to be hidden).
+    // A safe no-op for any model with no channel_visibilities rows at all
+    // (e.g. Users, Currencies), so this can be called unconditionally from
+    // BaseController::index() without checking whether the model supports it.
+    public function filterByChannel(?int $channelId)
+    {
+        if (!$channelId) {
+            return $this;
+        }
+
+        $modelClass = $this->modelClass;
+
+        return $this->whereNotIn($modelClass::columnName('id'), function ($query) use ($channelId, $modelClass) {
+            $query->select('model_id')
+                ->from('channel_visibilities')
+                ->where('channel_id', $channelId)
+                ->where('model_type', $modelClass)
+                ->where('is_enabled', false);
+        });
+    }
 }
