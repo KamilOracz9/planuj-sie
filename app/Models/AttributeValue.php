@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\CacheKeys;
 use App\QueryBuilders\AttributeValueQueryBuilder;
 use App\Traits\HasCache;
-use App\Traits\Media\HasIconMedia;
+use App\Traits\Media\HasMediaCollections;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -14,7 +14,7 @@ use Spatie\MediaLibrary\HasMedia;
 #[Fillable(['id', 'attribute_id', 'data', 'order_column', 'model_id', 'model_type'])]
 class AttributeValue extends BaseModel implements HasMedia
 {
-    use HasCache, HasIconMedia;
+    use HasCache, HasMediaCollections;
 
     protected static function boot()
     {
@@ -39,12 +39,6 @@ class AttributeValue extends BaseModel implements HasMedia
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\AttributeValueController::class, 'show']);
                 });
             }),
-            Route::group(['prefix' => 'attribute-values/{id}/media'], function () {
-                Route::get('/', [\App\Http\Controllers\PanelControllers\Media\AttributeValueMediaController::class, 'index']);
-                Route::post('/', [\App\Http\Controllers\PanelControllers\Media\AttributeValueMediaController::class, 'store']);
-                Route::post('/attach', [\App\Http\Controllers\PanelControllers\Media\AttributeValueMediaController::class, 'attach']);
-                Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\Media\AttributeValueMediaController::class, 'destroy']);
-            })
         ];
     }
 

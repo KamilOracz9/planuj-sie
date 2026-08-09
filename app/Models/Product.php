@@ -10,19 +10,17 @@ use App\Traits\HasChannelVisibility;
 use App\Traits\HasCollections;
 use App\Traits\HasPrices;
 use App\Traits\HasTranslations;
-use App\Traits\Media\HasDocumentMedia;
-use App\Traits\Media\HasGalleryMedia;
+use App\Traits\Media\HasMediaCollections;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Route;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 #[Fillable(['id', 'brand_id', 'series_id'])]
 class Product extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasAttributes, HasCollections, HasChannelVisibility, HasPrices, HasGalleryMedia, HasDocumentMedia;
+    use HasTranslations, HasCache, Sluggable, HasAttributes, HasCollections, HasChannelVisibility, HasPrices, HasMediaCollections;
 
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
@@ -69,17 +67,6 @@ class Product extends BaseModel implements HasMedia
         return $groups;
     }
 
-    public function registerMediaCollections(): void
-    {
-        $this->registerGalleryCollections();
-        $this->registerDocumentCollection();
-    }
-
-    public function registerMediaConversions(?Media $media = null): void
-    {
-        $this->registerGalleryConversions();
-    }
-
     public static function routes()
     {
         return [
@@ -95,13 +82,6 @@ class Product extends BaseModel implements HasMedia
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'show']);
                 });
             }),
-            Route::group(['prefix' => 'products/{id}/media'], function () {
-                Route::get('/', [\App\Http\Controllers\PanelControllers\Media\ProductMediaController::class, 'index']);
-                Route::post('/', [\App\Http\Controllers\PanelControllers\Media\ProductMediaController::class, 'store']);
-                Route::post('/attach', [\App\Http\Controllers\PanelControllers\Media\ProductMediaController::class, 'attach']);
-                Route::post('/reorder', [\App\Http\Controllers\PanelControllers\Media\ProductMediaController::class, 'reorder']);
-                Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\Media\ProductMediaController::class, 'destroy']);
-            })
         ];
     }
 

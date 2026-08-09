@@ -8,19 +8,17 @@ use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasChannelVisibility;
 use App\Traits\HasTranslations;
-use App\Traits\Media\HasDocumentMedia;
-use App\Traits\Media\HasLogoMedia;
+use App\Traits\Media\HasMediaCollections;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 #[Fillable(['id'])]
 class Brand extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasFactory, HasAttributes, HasChannelVisibility, HasLogoMedia, HasDocumentMedia;
+    use HasTranslations, HasCache, Sluggable, HasFactory, HasAttributes, HasChannelVisibility, HasMediaCollections;
 
     public array $translatable = ['name', 'slug'];
     public string $sluggable = 'name';
@@ -34,17 +32,6 @@ class Brand extends BaseModel implements HasMedia
         static::bootAttributes();
         static::bootChannelVisibility();
         static::bootCache();
-    }
-
-    public function registerMediaCollections(): void
-    {
-        $this->registerLogoCollection();
-        $this->registerDocumentCollection();
-    }
-
-    public function registerMediaConversions(?Media $media = null): void
-    {
-        $this->registerLogoConversions();
     }
 
     public static function routes()
@@ -62,13 +49,6 @@ class Brand extends BaseModel implements HasMedia
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\BrandController::class, 'show']);
                 });
             }),
-            Route::group(['prefix' => 'brands/{id}/media'], function () {
-                Route::get('/', [\App\Http\Controllers\PanelControllers\Media\BrandMediaController::class, 'index']);
-                Route::post('/', [\App\Http\Controllers\PanelControllers\Media\BrandMediaController::class, 'store']);
-                Route::post('/attach', [\App\Http\Controllers\PanelControllers\Media\BrandMediaController::class, 'attach']);
-                Route::post('/reorder', [\App\Http\Controllers\PanelControllers\Media\BrandMediaController::class, 'reorder']);
-                Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\Media\BrandMediaController::class, 'destroy']);
-            })
         ];
     }
 

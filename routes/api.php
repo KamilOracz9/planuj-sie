@@ -14,6 +14,7 @@ use App\Models\Collection;
 use App\Models\Currency;
 use App\Models\Gallery;
 use App\Models\Locale;
+use App\Models\MediaCollection;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Series;
@@ -35,6 +36,7 @@ Route::group(['middleware' => 'api'], function () {
         ChannelVisibility::routes();
         Currency::routes();
         Price::routes();
+        MediaCollection::routes();
         Locale::routes();
         Category::routes();
         Product::routes();

@@ -20,6 +20,7 @@ enum CacheKeys: string
     case SERIES_LIST = 'series_list';
     case COLLECTIONS_LIST = 'collections_list';
     case CURRENCIES_LIST = 'currencies_list';
+    case MEDIA_COLLECTIONS_LIST = 'media_collections_list';
 
     case CATEGORIES_SELECT = 'categories_select';
     case PRODUCTS_SELECT = 'products_select';
@@ -33,4 +34,7 @@ enum CacheKeys: string
     case CHANNEL_VISIBILITIES_SELECT_BY_MODEL = 'channel_visibilities_select_by_model';
     case CURRENCIES_SELECT = 'currencies_select';
     case PRICES_SELECT_BY_MODEL = 'prices_select_by_model';
+    case MEDIA_COLLECTIONS_SELECT = 'media_collections_select';
+    case MEDIA_COLLECTIONS_REGISTRY = 'media_collections_registry';
+    case MEDIA_COLLECTION_ASSIGNMENTS_BY_MODEL_TYPE = 'media_collection_assignments_by_model_type';
 }

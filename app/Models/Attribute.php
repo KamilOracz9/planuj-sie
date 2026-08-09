@@ -6,7 +6,7 @@ use App\Enums\CacheKeys;
 use App\QueryBuilders\AttributeQueryBuilder;
 use App\Traits\HasCache;
 use App\Traits\HasTranslations;
-use App\Traits\Media\HasIconMedia;
+use App\Traits\Media\HasMediaCollections;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +16,7 @@ use Spatie\MediaLibrary\HasMedia;
 #[Fillable(['id', 'order_column', 'attribute_type_id'])]
 class Attribute extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasIconMedia;
+    use HasTranslations, HasCache, Sluggable, HasMediaCollections;
 
     public array $translatable = ['name', 'slug'];
     public string $sluggable = 'name';
@@ -52,12 +52,6 @@ class Attribute extends BaseModel implements HasMedia
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\AttributeController::class, 'show']);
                 });
             }),
-            Route::group(['prefix' => 'attributes/{id}/media'], function () {
-                Route::get('/', [\App\Http\Controllers\PanelControllers\Media\AttributeMediaController::class, 'index']);
-                Route::post('/', [\App\Http\Controllers\PanelControllers\Media\AttributeMediaController::class, 'store']);
-                Route::post('/attach', [\App\Http\Controllers\PanelControllers\Media\AttributeMediaController::class, 'attach']);
-                Route::delete('/{mediaId}', [\App\Http\Controllers\PanelControllers\Media\AttributeMediaController::class, 'destroy']);
-            })
         ];
     }
 
