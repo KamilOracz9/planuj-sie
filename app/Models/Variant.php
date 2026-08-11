@@ -6,18 +6,20 @@ use App\Enums\CacheKeys;
 use App\QueryBuilders\VariantQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
+use App\Traits\HasChannelVisibility;
 use App\Traits\HasPrices;
 use App\Traits\HasTranslations;
 use App\Traits\Media\HasMediaCollections;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Route;
 use Spatie\MediaLibrary\HasMedia;
 
 #[Fillable(['id', 'product_id'])]
 class Variant extends BaseModel implements HasMedia
 {
-    use HasTranslations, HasCache, Sluggable, HasAttributes, HasPrices, HasMediaCollections;
+    use HasTranslations, HasCache, Sluggable, HasAttributes, HasChannelVisibility, HasPrices, HasMediaCollections;
 
     public array $translatable = ['name', 'slug', 'description', 'short_description'];
     public string $sluggable = 'name';
@@ -29,8 +31,19 @@ class Variant extends BaseModel implements HasMedia
         static::bootSluggable();
         static::bootTranslations();
         static::bootAttributes();
+        static::bootChannelVisibility();
         static::bootPrices();
         static::bootCache();
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function ancestorGroupsForVisibility(): array
+    {
+        return [[$this->product]];
     }
 
     public static function routes()

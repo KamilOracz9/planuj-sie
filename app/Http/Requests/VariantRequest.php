@@ -32,6 +32,9 @@ class VariantRequest extends BaseRequest
             'attributes' => ['nullable', 'array'],
             'attributes.*.attribute_id' => ['required', 'integer', 'exists:attributes,id'],
             'attributes.*.data' => ['required'],
+            'channels' => ['nullable', 'array'],
+            'channels.*.channel_id' => ['required', 'integer', Rule::exists(Channel::tableName(), 'id')],
+            'channels.*.is_enabled' => ['required', 'boolean'],
             'prices' => ['nullable', 'array', function ($attribute, $value, $fail) {
                 $pairs = array_map(fn($p) => ($p['channel_id'] ?? null) . '-' . ($p['currency_id'] ?? null), $value ?? []);
                 if (count($pairs) !== count(array_unique($pairs))) {

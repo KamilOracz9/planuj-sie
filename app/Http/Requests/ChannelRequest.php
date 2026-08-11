@@ -20,6 +20,7 @@ class ChannelRequest extends BaseRequest
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', Rule::unique('channel_translations', 'slug')->ignore($channelId, 'channel_id')],
+            'is_default' => ['sometimes', 'boolean'],
         ];
     }
 }

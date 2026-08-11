@@ -40,4 +40,24 @@ class ChannelController extends BaseController
 
         return response()->json(['id' => $model->id], 201);
     }
+
+    // Overridden (not inherited from BaseController::select(), which
+    // hardcodes {id,name} only) so channelsSelect carries is_default too -
+    // needed by the panel's global ChannelSwitcher to pre-select the default
+    // channel before any cookie has been set.
+    public function select(string $locale)
+    {
+        $models = cache()->remember(
+            $this->selectCacheKey . "_$locale",
+            config('app.cache_lifetime'),
+            fn() => Channel::queryBuilder()
+                ->withTranslation($this->modelTranslation::class, $locale, 'id', $this->modelTranslation::FOREIGN_KEY, Channel::class)
+                ->select(Channel::columnName('id'), Channel::columnName('is_default'), $this->modelTranslation::columnName('name'))
+                ->get()
+                ->map(fn($item) => (array) $item)
+                ->toArray()
+        );
+
+        return response()->json($models);
+    }
 }

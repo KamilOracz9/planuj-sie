@@ -10,7 +10,7 @@ use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 
-#[Fillable(['id'])]
+#[Fillable(['id', 'is_default'])]
 class Channel extends BaseModel
 {
     use HasTranslations, HasCache, Sluggable;
@@ -25,6 +25,14 @@ class Channel extends BaseModel
         static::bootSluggable();
         static::bootTranslations();
         static::bootCache();
+
+        // Enforces exactly one default channel: a mass update (not a model
+        // save), so it doesn't re-fire this same saved() event.
+        static::saved(function ($channel) {
+            if ($channel->is_default) {
+                static::query()->where('id', '!=', $channel->id)->update(['is_default' => false]);
+            }
+        });
     }
 
     public static function routes()

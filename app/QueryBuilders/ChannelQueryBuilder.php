@@ -18,6 +18,7 @@ class ChannelQueryBuilder extends BaseQueryBuilder
     {
         return $this->select([
             Channel::columnName('id'),
+            Channel::columnName('is_default'),
             Channel::columnName('created_at'),
             ChannelTranslation::columnName('slug'),
             ChannelTranslation::columnName('name'),

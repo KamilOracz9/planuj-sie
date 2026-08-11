@@ -12,32 +12,37 @@ class AttributeSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Run the database seeds.
-     */
+    // attribute_type_id matches AttributeTypeSeeder::TYPES order:
+    // 1=text, 2=number, 3=select, 4=multiselect, 5=date, 6=boolean.
+    // One attribute per type, so every AttributeValue::data JSON shape
+    // (see HasAttributes::bootAttributes()'s match()) gets exercised by
+    // ProductSeeder/VariantSeeder.
+    const ATTRIBUTES = [
+        ['attribute_type_id' => 1, 'pl-PL' => ['name' => 'Materiał', 'slug' => 'material'], 'en-US' => ['name' => 'Material', 'slug' => 'material-en']],
+        ['attribute_type_id' => 2, 'pl-PL' => ['name' => 'Waga (g)', 'slug' => 'waga-g'], 'en-US' => ['name' => 'Weight (g)', 'slug' => 'weight-g']],
+        ['attribute_type_id' => 6, 'pl-PL' => ['name' => 'Bestseller', 'slug' => 'bestseller-pl'], 'en-US' => ['name' => 'Bestseller', 'slug' => 'bestseller-en']],
+        ['attribute_type_id' => 5, 'pl-PL' => ['name' => 'Data wydania', 'slug' => 'data-wydania'], 'en-US' => ['name' => 'Release date', 'slug' => 'release-date']],
+        ['attribute_type_id' => 3, 'pl-PL' => ['name' => 'Kolor', 'slug' => 'kolor'], 'en-US' => ['name' => 'Color', 'slug' => 'color']],
+        ['attribute_type_id' => 4, 'pl-PL' => ['name' => 'Rozmiar', 'slug' => 'rozmiar'], 'en-US' => ['name' => 'Size', 'slug' => 'size']],
+    ];
+
     public function run(): void
     {
-        DB::table(Attribute::tableName())->insert([
-            'id' => 1,
-            'attribute_type_id' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        foreach (self::ATTRIBUTES as $index => $attribute) {
+            $id = $index + 1;
 
-        DB::table(AttributeTranslation::tableName())->insert([
-            'id' => 1,
-            'locale' => 'pl-PL',
-            'name' => 'Atrybut tekstowy 1',
-            'slug' => 'atrybut-tekstowy-1',
-            'attribute_id' => 1,
-        ]);
+            DB::table(Attribute::tableName())->insert([
+                'id' => $id,
+                'attribute_type_id' => $attribute['attribute_type_id'],
+                'order_column' => $index,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        DB::table(AttributeTranslation::tableName())->insert([
-            'id' => 2,
-            'locale' => 'en-US',
-            'name' => 'Text attribute 1',
-            'slug' => 'text-attribute-1',
-            'attribute_id' => 1,
-        ]);
+            DB::table(AttributeTranslation::tableName())->insert([
+                ['locale' => 'pl-PL', 'name' => $attribute['pl-PL']['name'], 'slug' => $attribute['pl-PL']['slug'], 'attribute_id' => $id],
+                ['locale' => 'en-US', 'name' => $attribute['en-US']['name'], 'slug' => $attribute['en-US']['slug'], 'attribute_id' => $id],
+            ]);
+        }
     }
 }
