@@ -10,6 +10,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "kamiloracz9/eloquent-translatable": "^1.0",
+        "kamiloracz9/media-gallery": "^1.0",
+        "kamiloracz9/swappable-cache": "^1.0",
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
@@ -89,5 +92,19 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:kamiloracz9/composer-swappable-cache.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:kamiloracz9/eloquent-translatable.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:kamiloracz9/media-gallery.git"
+        }
+    ]
 }

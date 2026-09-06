@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0179cf05621b83b01ca0cf83d5e4b874",
+    "content-hash": "7bb0857b93cef783b81bcc86184ac8e1",
     "packages": [
         {
             "name": "brick/math",
@@ -1129,6 +1129,177 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "kamiloracz9/eloquent-translatable",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:KamilOracz9/eloquent-translatable.git",
+                "reference": "fe1b707372e416078cc2fa79d57a47735e58591e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KamilOracz9/eloquent-translatable/zipball/fe1b707372e416078cc2fa79d57a47735e58591e",
+                "reference": "fe1b707372e416078cc2fa79d57a47735e58591e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kamiloracz9\\EloquentTranslatable\\EloquentTranslatableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kamiloracz9\\EloquentTranslatable\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Kamiloracz9\\EloquentTranslatable\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "kamiloracz9",
+                    "email": "kamiloracz9@gmail.com"
+                }
+            ],
+            "description": "Per-locale attribute translations for Eloquent models: a HasTranslations trait backed by dedicated translation tables, translation-aware query builder joins, and an optional per-locale Sluggable trait.",
+            "support": {
+                "source": "https://github.com/KamilOracz9/eloquent-translatable/tree/1.0.0",
+                "issues": "https://github.com/KamilOracz9/eloquent-translatable/issues"
+            },
+            "time": "2026-09-06T16:22:18+00:00"
+        },
+        {
+            "name": "kamiloracz9/media-gallery",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:KamilOracz9/media-gallery.git",
+                "reference": "c4c9085f2e1238289275b47ea24fc739fc2b71bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KamilOracz9/media-gallery/zipball/c4c9085f2e1238289275b47ea24fc739fc2b71bf",
+                "reference": "c4c9085f2e1238289275b47ea24fc739fc2b71bf",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/routing": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.1",
+                "spatie/laravel-medialibrary": "^11.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.0|^9.0|^10.0",
+                "pestphp/pest": "^2.0|^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kamiloracz9\\MediaGallery\\GalleryServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kamiloracz9\\MediaGallery\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Kamiloracz9\\MediaGallery\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "kamiloracz9",
+                    "email": "kamiloracz9@gmail.com"
+                }
+            ],
+            "description": "A generic, global media/file gallery for Laravel on top of spatie/laravel-medialibrary: a singleton Gallery, self-nesting folders, and config-driven upload collections.",
+            "support": {
+                "source": "https://github.com/KamilOracz9/media-gallery/tree/1.0.0",
+                "issues": "https://github.com/KamilOracz9/media-gallery/issues"
+            },
+            "time": "2026-09-06T17:43:06+00:00"
+        },
+        {
+            "name": "kamiloracz9/swappable-cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:KamilOracz9/swappable-cache.git",
+                "reference": "22fe7ec6a6c29ba2ae785941c977a2dac5269d4b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KamilOracz9/swappable-cache/zipball/22fe7ec6a6c29ba2ae785941c977a2dac5269d4b",
+                "reference": "22fe7ec6a6c29ba2ae785941c977a2dac5269d4b",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kamiloracz9\\SwappableCache\\SwappableCacheServiceProvider"
+                    ],
+                    "aliases": {
+                        "SwappableCache": "Kamiloracz9\\SwappableCache\\Facades\\SwappableCache"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kamiloracz9\\SwappableCache\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "kamiloracz9",
+                    "email": "kamiloracz9@gmail.com"
+                }
+            ],
+            "description": "Stale-while-revalidate style cache: serve cached data instantly while fingerprint checks trigger background swaps, with optional Eloquent model hydration.",
+            "keywords": [
+                "cache",
+                "eloquent",
+                "laravel",
+                "stale-while-revalidate"
+            ],
+            "support": {
+                "source": "https://github.com/KamilOracz9/swappable-cache/tree/v1.0.1",
+                "issues": "https://github.com/KamilOracz9/swappable-cache/issues"
+            },
+            "time": "2026-09-06T14:48:45+00:00"
         },
         {
             "name": "laravel/framework",
