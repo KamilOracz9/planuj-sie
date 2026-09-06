@@ -16,13 +16,12 @@ class AttributeOptionRequest extends BaseRequest
     {
         $attributeOptionId = $this->route('id');
 
-        return [
+        $rules = [
             'name' => ['required', 'array'],
             'name.pl-PL' => ['required', 'string', 'max:255'],
             'name.*' => ['nullable', 'string', 'max:255'],
             'slug' => ['required', 'array'],
             'slug.pl-PL' => ['required', 'string', 'max:255'],
-            'slug.*' => ['nullable', 'string', 'max:255', Rule::unique(AttributeOptionTranslation::tableName(), 'slug')->ignore($attributeOptionId, AttributeOptionTranslation::FOREIGN_KEY)],
             'order_column' => ['nullable', 'integer'],
             'attribute_id' => ['required', 'integer', 'exists:attributes,id'],
             'prices' => ['nullable', 'array', function ($attribute, $value, $fail) {
@@ -35,5 +34,23 @@ class AttributeOptionRequest extends BaseRequest
             'prices.*.currency_id' => ['required', 'integer', Rule::exists(Currency::tableName(), 'id')],
             'prices.*.amount' => ['required', 'numeric', 'min:0', 'regex:/^\d+(\.\d{1,2})?$/'],
         ];
+
+        // Per-locale, not `slug.*`: the DB constraint is unique(slug, locale)
+        // (see 2026_08_18_183117_...), not a single global unique(slug) - the
+        // same word (e.g. size "L") is a legitimate slug in both pl-PL and
+        // en-US at once, since routing is locale-prefixed. A locale-blind
+        // `Rule::unique('slug')` would reject that as a false duplicate.
+        foreach (config('app.supported_locales') as $locale) {
+            $rules["slug.$locale"] = [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique(AttributeOptionTranslation::tableName(), 'slug')
+                    ->where('locale', $locale)
+                    ->ignore($attributeOptionId, AttributeOptionTranslation::FOREIGN_KEY),
+            ];
+        }
+
+        return $rules;
     }
 }

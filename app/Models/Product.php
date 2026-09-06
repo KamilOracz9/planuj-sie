@@ -14,6 +14,7 @@ use App\Traits\Media\HasMediaCollections;
 use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Route;
 use Spatie\MediaLibrary\HasMedia;
 
@@ -48,6 +49,11 @@ class Product extends BaseModel implements HasMedia
         return $this->belongsTo(Series::class);
     }
 
+    public function variants(): HasMany
+    {
+        return $this->hasMany(Variant::class);
+    }
+
     public function ancestorGroupsForVisibility(): array
     {
         $groups = [];
@@ -79,6 +85,7 @@ class Product extends BaseModel implements HasMedia
                 Route::group(['prefix' => 'products'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\ProductController::class, 'index']);
                     Route::get('/select', [\App\Http\Controllers\PanelControllers\ProductController::class, 'select']);
+                    Route::get('/{id}/price-breakdown', [\App\Http\Controllers\PanelControllers\ProductController::class, 'priceBreakdown']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\ProductController::class, 'show']);
                 });
             }),

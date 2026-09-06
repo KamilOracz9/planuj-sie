@@ -22,15 +22,16 @@ class ChannelVisibility extends BaseModel
     }
 
     // No CRUD routes: rows are written exclusively through the owning
-    // entity's own save, via the HasChannelVisibility trait. This is the
-    // only route ChannelVisibility exposes directly - read-back for the
-    // owning entity's edit form.
+    // entity's own save, via the HasChannelVisibility trait. The routes
+    // below are read-only: raw rows for the owning entity's edit form
+    // (select) and the computed isVisibleInChannel() cascade (report).
     public static function routes()
     {
         return [
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'channel-visibilities'], function () {
                     Route::get('/select/{modelType}/{modelId}', [\App\Http\Controllers\PanelControllers\ChannelVisibilityController::class, 'selectByModel']);
+                    Route::get('/report/{modelType}/{modelId}/{channelId}', [\App\Http\Controllers\PanelControllers\ChannelVisibilityController::class, 'report']);
                 });
             }),
         ];

@@ -23,4 +23,13 @@ class VariantQueryBuilder extends BaseQueryBuilder
             VariantTranslation::columnName('name'),
         ]);
     }
+
+    public function filterByProduct(?int $productId)
+    {
+        if (!$productId) {
+            return $this;
+        }
+
+        return $this->where(Variant::columnName('product_id'), $productId);
+    }
 }

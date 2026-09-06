@@ -98,4 +98,49 @@ trait HasChannelVisibility
 
         return true;
     }
+
+    /**
+     * Same logic as isVisibleInChannel(), but instead of short-circuiting to
+     * a bool, records which dimension(s) block visibility so an admin UI can
+     * explain why a model isn't visible in a given channel.
+     */
+    public function visibilityReport(int $channelId, ?string $locale = null): array
+    {
+        $ownEnabled = $this->isEnabledForChannel($channelId);
+        $blockingGroups = [];
+
+        foreach ($this->ancestorGroupsForVisibility() as $group) {
+            $group = array_filter($group);
+
+            if (empty($group)) {
+                continue;
+            }
+
+            $groupVisible = false;
+
+            foreach ($group as $ancestor) {
+                if ($ancestor->isVisibleInChannel($channelId)) {
+                    $groupVisible = true;
+                    break;
+                }
+            }
+
+            if (!$groupVisible) {
+                $blockingGroups[] = array_map(fn($ancestor) => [
+                    'type' => class_basename($ancestor),
+                    'id' => $ancestor->id,
+                    'name' => method_exists($ancestor, 'translation')
+                        ? $ancestor->translation($locale)->first()?->name
+                        : null,
+                ], array_values($group));
+            }
+        }
+
+        return [
+            'channel_id' => $channelId,
+            'own_enabled' => $ownEnabled,
+            'blocking_groups' => $blockingGroups,
+            'visible' => $ownEnabled && empty($blockingGroups),
+        ];
+    }
 }

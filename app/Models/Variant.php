@@ -57,6 +57,7 @@ class Variant extends BaseModel implements HasMedia
             Route::group(['prefix' => '{locale}'], function () {
                 Route::group(['prefix' => 'variants'], function () {
                     Route::get('/', [\App\Http\Controllers\PanelControllers\VariantController::class, 'index']);
+                    Route::get('/by-product/{productId}', [\App\Http\Controllers\PanelControllers\VariantController::class, 'byProduct']);
                     Route::get('/{id}', [\App\Http\Controllers\PanelControllers\VariantController::class, 'show']);
                 });
             }),

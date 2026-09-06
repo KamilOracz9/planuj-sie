@@ -39,4 +39,24 @@ class VariantController extends BaseController
 
         return response()->json(['id' => $model->id], 201);
     }
+
+    // Dedicated, uncached endpoint for a single product's variants (admin
+    // detail view) - deliberately not folded into index()'s channel-keyed
+    // cache, which would need a second product_id dimension for what is a
+    // low-traffic, single-product lookup.
+    public function byProduct(string $locale, int $productId)
+    {
+        $channelId = request()->integer('channel_id') ?: null;
+
+        $data = Variant::queryBuilder()
+            ->withTranslation(VariantTranslation::class, $locale, 'id', VariantTranslation::FOREIGN_KEY, Variant::class)
+            ->filterByProduct($productId)
+            ->filterByChannel($channelId)
+            ->listSelect()
+            ->get()
+            ->map(fn($item) => (array) $item)
+            ->toArray();
+
+        return response()->json($data);
+    }
 }
