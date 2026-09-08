@@ -23,13 +23,13 @@ class MediaResource extends JsonResource
             'order_column' => $this->order_column,
             'folder_id' => $this->getCustomProperty('folder_id'),
             // Media lives on the private 'media' disk (see the api-security
-            // skill) - served only through this authenticated route, never
-            // a direct disk URL.
-            'url' => route('media.show', ['media' => $this->id]),
+            // skill) - getUrl() resolves through App\Support\Media\RouteUrlGenerator
+            // to a signed 'media.show' URL, never a direct disk URL.
+            'url' => $this->getUrl(),
             'conversions' => collect($this->getGeneratedConversions())
                 ->filter()
                 ->keys()
-                ->mapWithKeys(fn(string $name) => [$name => route('media.show', ['media' => $this->id, 'conversion' => $name])]),
+                ->mapWithKeys(fn(string $name) => [$name => $this->getUrl($name)]),
             'created_at' => $this->created_at,
         ];
     }

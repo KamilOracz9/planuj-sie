@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PanelControllers\AuthController;
 use App\Http\Controllers\PanelControllers\MediaStreamController;
+use App\Http\Middleware\ApiKeyMiddleware;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\AttributeOption;
@@ -31,10 +32,18 @@ Route::group(['middleware' => 'api'], function () {
     // ever attempting that redirect.
     Route::post('login', [AuthController::class, 'login'])->name('login');
 
+    // A plain <img src> can't send the X-API-KEY/JWT headers every other
+    // endpoint requires, so this route is authorized by its signature
+    // instead (see App\Support\Media\RouteUrlGenerator, which is the only
+    // place that generates these URLs) rather than ApiKeyMiddleware/auth:api.
+    Route::get('media/{media}/{conversion?}', [MediaStreamController::class, 'show'])
+        ->middleware('signed')
+        ->withoutMiddleware(ApiKeyMiddleware::class)
+        ->name('media.show');
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
-        Route::get('media/{media}/{conversion?}', [MediaStreamController::class, 'show'])->name('media.show');
 
         User::routes();
         Brand::routes();

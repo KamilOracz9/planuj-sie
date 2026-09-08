@@ -18,7 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(HandleCors::class);
-        $middleware->prepend(ApiKeyMiddleware::class);
+        // Scoped to the 'api' group (not global) so it doesn't touch
+        // routes/web.php or the /up health check, and so a specific route
+        // (media.show - see routes/api.php) can opt out via
+        // ->withoutMiddleware(): that only works for group/route
+        // middleware, not middleware prepended truly globally.
+        $middleware->api(prepend: [ApiKeyMiddleware::class]);
         // Caches every safe (GET, 200) response in the API - see the
         // caching-strategy skill. Scoped to the 'api' group (not global)
         // so it doesn't touch routes/web.php or the /up health check.
