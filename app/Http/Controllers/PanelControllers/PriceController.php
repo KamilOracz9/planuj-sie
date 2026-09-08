@@ -6,15 +6,15 @@ use App\Enums\CacheKeys;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Models\Price;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class PriceController extends Controller
 {
     public function selectByModel(string $locale, string $modelType, int $modelId)
     {
-        $models = cache()->remember(
-            CacheKeys::PRICES_SELECT_BY_MODEL->value . "_$locale" . "_$modelType" . "_$modelId",
-            config('app.cache_lifetime'),
-            function () use ($modelType, $modelId) {
+        $models = SwappableCache::remember(
+            key: CacheKeys::PRICES_SELECT_BY_MODEL->value . "_$locale" . "_$modelType" . "_$modelId",
+            resolve: function () use ($modelType, $modelId) {
                 $rows = Price::queryBuilder()
                     ->filterByModel($modelType, $modelId)
                     ->listSelect()
@@ -34,7 +34,9 @@ class PriceController extends Controller
                     'currency_id' => $item->currency_id,
                     'amount' => $currencies->get($item->currency_id)?->toMajorUnits((int) $item->amount) ?? $item->amount,
                 ])->toArray();
-            }
+            },
+            fingerprint: fn() => Price::where('model_type', $modelType)->where('model_id', $modelId)->max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);

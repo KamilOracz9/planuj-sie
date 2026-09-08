@@ -38,6 +38,18 @@ return [
             'report' => false,
         ],
 
+        // Media/Documents (spatie/laravel-medialibrary + kamiloracz9/media-gallery)
+        // live here, not on 'public' - no symlink, no framework-served route
+        // ('serve' left unset/false, unlike 'local' above), so files are only
+        // reachable through the authenticated media-streaming route. See
+        // the api-security skill.
+        'media' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/media'),
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

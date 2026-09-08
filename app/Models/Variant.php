@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\Models\Translations\VariantTranslation;
 use App\QueryBuilders\VariantQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasChannelVisibility;
 use App\Traits\HasPrices;
-use App\Traits\HasTranslations;
 use App\Traits\Media\HasMediaCollections;
-use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Route;
+use Kamiloracz9\EloquentTranslatable\HasTranslations;
+use Kamiloracz9\EloquentTranslatable\Sluggable;
 use Spatie\MediaLibrary\HasMedia;
 
 #[Fillable(['id', 'product_id'])]
@@ -34,6 +35,11 @@ class Variant extends BaseModel implements HasMedia
         static::bootChannelVisibility();
         static::bootPrices();
         static::bootCache();
+    }
+
+    public static function translationModel(): string
+    {
+        return VariantTranslation::class;
     }
 
     public function product(): BelongsTo

@@ -6,6 +6,7 @@ use App\Enums\CacheKeys;
 use App\Http\Resources\AttributeTypeResource;
 use App\Models\AttributeType;
 use App\Models\Translations\AttributeTypeTranslation;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class AttributeTypeController extends BaseController
 {
@@ -24,10 +25,9 @@ class AttributeTypeController extends BaseController
 
     public function select(string $locale)
     {
-        $models = cache()->remember(
-            $this->selectCacheKey . "_$locale",
-            config('app.cache_lifetime'),
-            fn() => AttributeType::queryBuilder()
+        $models = SwappableCache::remember(
+            key: $this->selectCacheKey . "_$locale",
+            resolve: fn() => AttributeType::queryBuilder()
                 ->withTranslation(AttributeTypeTranslation::class, $locale, 'id', AttributeTypeTranslation::FOREIGN_KEY, AttributeType::class)
                 ->select(
                     AttributeType::columnName('id'),
@@ -36,7 +36,9 @@ class AttributeTypeController extends BaseController
                 )
                 ->get()
                 ->map(fn($item) => (array) $item)
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => AttributeType::max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);

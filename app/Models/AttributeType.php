@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\Models\Translations\AttributeTypeTranslation;
 use App\QueryBuilders\AttributeTypeQueryBuilder;
 use App\Traits\HasCache;
-use App\Traits\HasTranslations;
-use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Kamiloracz9\EloquentTranslatable\HasTranslations;
+use Kamiloracz9\EloquentTranslatable\Sluggable;
 
 #[Fillable(['id', 'order_column'])]
 class AttributeType extends BaseModel
@@ -25,6 +26,11 @@ class AttributeType extends BaseModel
         static::bootSluggable();
         static::bootTranslations();
         static::bootCache();
+    }
+
+    public static function translationModel(): string
+    {
+        return AttributeTypeTranslation::class;
     }
 
     public static function routes()

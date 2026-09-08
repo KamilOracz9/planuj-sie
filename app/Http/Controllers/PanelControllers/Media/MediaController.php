@@ -5,11 +5,11 @@ namespace App\Http\Controllers\PanelControllers\Media;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MediaResource;
 use App\Models\Channel;
-use App\Models\Gallery;
 use App\Models\MediaCollection;
 use App\Models\MediaCollectionAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Kamiloracz9\MediaGallery\Models\Gallery;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 // Replaces BaseMediaController + its 9 per-model subclasses: collections are

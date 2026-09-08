@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\Models\Translations\BrandTranslation;
 use App\QueryBuilders\BrandQueryBuilder;
 use App\Traits\HasAttributes;
 use App\Traits\HasCache;
 use App\Traits\HasChannelVisibility;
-use App\Traits\HasTranslations;
 use App\Traits\Media\HasMediaCollections;
-use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Kamiloracz9\EloquentTranslatable\HasTranslations;
+use Kamiloracz9\EloquentTranslatable\Sluggable;
 use Spatie\MediaLibrary\HasMedia;
 
 #[Fillable(['id'])]
@@ -32,6 +33,11 @@ class Brand extends BaseModel implements HasMedia
         static::bootAttributes();
         static::bootChannelVisibility();
         static::bootCache();
+    }
+
+    public static function translationModel(): string
+    {
+        return BrandTranslation::class;
     }
 
     public static function routes()

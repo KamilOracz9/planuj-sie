@@ -8,6 +8,7 @@ use App\Http\Resources\MediaCollectionResource;
 use App\Models\MediaCollection;
 use App\Models\MediaCollectionAssignment;
 use App\Models\MediaCollectionConversion;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class MediaCollectionController extends BaseController
 {
@@ -47,14 +48,15 @@ class MediaCollectionController extends BaseController
     // CurrencyController.
     public function select(string $locale)
     {
-        $models = cache()->remember(
-            $this->selectCacheKey . "_$locale",
-            config('app.cache_lifetime'),
-            fn() => MediaCollection::queryBuilder()
+        $models = SwappableCache::remember(
+            key: $this->selectCacheKey . "_$locale",
+            resolve: fn() => MediaCollection::queryBuilder()
                 ->listSelect()
                 ->get()
                 ->map(fn($item) => (array) $item)
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => MediaCollection::max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);
@@ -69,10 +71,9 @@ class MediaCollectionController extends BaseController
     // endpoint).
     public function show(string $locale, int $id)
     {
-        $model = cache()->remember(
-            "{$this->listCacheKey}_show_{$locale}_{$id}",
-            config('app.cache_lifetime'),
-            function () use ($id) {
+        $model = SwappableCache::remember(
+            key: "{$this->listCacheKey}_show_{$locale}_{$id}",
+            resolve: function () use ($id) {
                 $model = MediaCollection::query()->find($id);
 
                 if (!$model) {
@@ -92,7 +93,13 @@ class MediaCollectionController extends BaseController
                     ->toArray();
 
                 return $model;
-            }
+            },
+            fingerprint: fn() => implode('|', [
+                MediaCollection::where('id', $id)->value('updated_at'),
+                MediaCollectionConversion::where('media_collection_id', $id)->max('updated_at'),
+                MediaCollectionAssignment::where('media_collection_id', $id)->max('updated_at'),
+            ]),
+            checkInterval: 60,
         );
 
         if (!$model) {

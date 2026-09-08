@@ -6,6 +6,7 @@ use App\Enums\CacheKeys;
 use App\Http\Requests\CurrencyRequest;
 use App\Http\Resources\CurrencyResource;
 use App\Models\Currency;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class CurrencyController extends BaseController
 {
@@ -44,14 +45,15 @@ class CurrencyController extends BaseController
     // which guard with when()/if()) — must override rather than inherit.
     public function select(string $locale)
     {
-        $models = cache()->remember(
-            $this->selectCacheKey . "_$locale",
-            config('app.cache_lifetime'),
-            fn() => Currency::queryBuilder()
+        $models = SwappableCache::remember(
+            key: $this->selectCacheKey . "_$locale",
+            resolve: fn() => Currency::queryBuilder()
                 ->listSelect()
                 ->get()
                 ->map(fn($item) => (array) $item)
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => Currency::max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);

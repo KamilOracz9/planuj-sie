@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\Models\Translations\LocaleTranslation;
 use App\QueryBuilders\LocaleQueryBuilder;
 use App\Traits\HasCache;
-use App\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Kamiloracz9\EloquentTranslatable\HasTranslations;
 
 #[Fillable(['code', 'id'])]
 class Locale extends BaseModel
@@ -22,6 +23,11 @@ class Locale extends BaseModel
 
         static::bootTranslations();
         static::bootCache();
+    }
+
+    public static function translationModel(): string
+    {
+        return LocaleTranslation::class;
     }
 
     public static function routes()

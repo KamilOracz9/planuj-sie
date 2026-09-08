@@ -7,6 +7,7 @@ use App\Http\Requests\ChannelRequest;
 use App\Models\Channel;
 use App\Http\Resources\ChannelResource;
 use App\Models\Translations\ChannelTranslation;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class ChannelController extends BaseController
 {
@@ -47,15 +48,16 @@ class ChannelController extends BaseController
     // channel before any cookie has been set.
     public function select(string $locale)
     {
-        $models = cache()->remember(
-            $this->selectCacheKey . "_$locale",
-            config('app.cache_lifetime'),
-            fn() => Channel::queryBuilder()
+        $models = SwappableCache::remember(
+            key: $this->selectCacheKey . "_$locale",
+            resolve: fn() => Channel::queryBuilder()
                 ->withTranslation($this->modelTranslation::class, $locale, 'id', $this->modelTranslation::FOREIGN_KEY, Channel::class)
                 ->select(Channel::columnName('id'), Channel::columnName('is_default'), $this->modelTranslation::columnName('name'))
                 ->get()
                 ->map(fn($item) => (array) $item)
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => Channel::max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);

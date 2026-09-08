@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasTableHelpers;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 abstract class BaseModel extends Model
 {
+    use HasTableHelpers;
+
     public static function __callStatic($method, $parameters)
     {
         $model = new (get_called_class()) ?? new self;
@@ -18,20 +19,5 @@ abstract class BaseModel extends Model
         }
 
         return parent::__callStatic($method, $parameters);
-    }
-
-    public static function tableName(): string
-    {
-        return (new static)->getTable();
-    }
-
-    public static function columnName(string $column): string
-    {
-        return self::tableName() . '.' . $column;
-    }
-
-    public static function modelName(): string
-    {
-        return Str::snake(Arr::last(explode('\\', get_called_class())));
     }
 }

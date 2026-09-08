@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ChannelVisibility;
 use App\Traits\HasChannelVisibility;
 use Illuminate\Support\Str;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class ChannelVisibilityController extends Controller
 {
@@ -25,10 +26,9 @@ class ChannelVisibilityController extends Controller
 
     public function selectByModel(string $locale, string $modelType, int $modelId)
     {
-        $models = cache()->remember(
-            CacheKeys::CHANNEL_VISIBILITIES_SELECT_BY_MODEL->value . "_$locale" . "_$modelType" . "_$modelId",
-            config('app.cache_lifetime'),
-            fn() => ChannelVisibility::queryBuilder()
+        $models = SwappableCache::remember(
+            key: CacheKeys::CHANNEL_VISIBILITIES_SELECT_BY_MODEL->value . "_$locale" . "_$modelType" . "_$modelId",
+            resolve: fn() => ChannelVisibility::queryBuilder()
                 ->filterByModel($modelType, $modelId)
                 ->listSelect()
                 ->get()
@@ -36,7 +36,9 @@ class ChannelVisibilityController extends Controller
                     'channel_id' => $item->channel_id,
                     'is_enabled' => (bool) $item->is_enabled,
                 ])
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => ChannelVisibility::where('model_type', $modelType)->where('model_id', $modelId)->max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);

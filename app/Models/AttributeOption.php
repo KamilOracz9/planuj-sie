@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\Models\Translations\AttributeOptionTranslation;
 use App\QueryBuilders\AttributeOptionQueryBuilder;
 use App\Traits\HasCache;
 use App\Traits\HasPrices;
-use App\Traits\HasTranslations;
 use App\Traits\Media\HasMediaCollections;
-use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Kamiloracz9\EloquentTranslatable\HasTranslations;
+use Kamiloracz9\EloquentTranslatable\Sluggable;
 use Spatie\MediaLibrary\HasMedia;
 
 #[Fillable(['id', 'attribute_id', 'order_column'])]
@@ -38,6 +39,11 @@ class AttributeOption extends BaseModel implements HasMedia
             }
         });
         static::deleted(fn ($model) => static::clearAttributeSelectCache($model->attribute_id));
+    }
+
+    public static function translationModel(): string
+    {
+        return AttributeOptionTranslation::class;
     }
 
     public static function routes()

@@ -5,14 +5,15 @@ namespace App\Http\Repositories;
 use App\Enums\CacheKeys;
 use App\Models\Attribute;
 use App\Models\AttributeType;
-use Illuminate\Support\Facades\Cache;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class AttributeRepository
 {
     public static function getAttributesWithType()
     {
-        return Cache::remember(CacheKeys::ATTRIBUTES_WITH_TYPE_LIST->value, config('app.cache_lifetime'), function () {
-            return Attribute::queryBuilder()
+        return SwappableCache::remember(
+            key: CacheKeys::ATTRIBUTES_WITH_TYPE_LIST->value,
+            resolve: fn () => Attribute::queryBuilder()
                 ->withAttributeType()
                 ->select(
                     Attribute::columnName('id'),
@@ -20,8 +21,10 @@ class AttributeRepository
                 )
                 ->get()
                 ->pluck('code', 'id')
-                ->toArray();
-        });
+                ->toArray(),
+            fingerprint: fn () => Attribute::max('updated_at'),
+            checkInterval: 60,
+        );
     }
 
     public static function getAttributeType(int $attributeId): ?string

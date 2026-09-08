@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\Models\Translations\ChannelTranslation;
 use App\QueryBuilders\ChannelQueryBuilder;
 use App\Traits\HasCache;
-use App\Traits\HasTranslations;
-use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Kamiloracz9\EloquentTranslatable\HasTranslations;
+use Kamiloracz9\EloquentTranslatable\Sluggable;
 
 #[Fillable(['id', 'is_default'])]
 class Channel extends BaseModel
@@ -33,6 +34,11 @@ class Channel extends BaseModel
                 static::query()->where('id', '!=', $channel->id)->update(['is_default' => false]);
             }
         });
+    }
+
+    public static function translationModel(): string
+    {
+        return ChannelTranslation::class;
     }
 
     public static function routes()

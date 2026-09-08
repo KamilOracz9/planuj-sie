@@ -7,6 +7,7 @@ use App\Http\Requests\AttributeValueRequest;
 use App\Http\Resources\AttributeValueResource;
 use App\Models\AttributeType;
 use App\Models\AttributeValue;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class AttributeValueController extends BaseController
 {
@@ -45,10 +46,9 @@ class AttributeValueController extends BaseController
             return response()->json(['error' => 'Select cache key not defined.'], 500);
         }
 
-        $models = cache()->remember(
-            $this->selectCacheKey . "_$locale" . "_$modelType" . "_$modelId",
-            config('app.cache_lifetime'),
-            fn() => AttributeValue::queryBuilder()
+        $models = SwappableCache::remember(
+            key: $this->selectCacheKey . "_$locale" . "_$modelType" . "_$modelId",
+            resolve: fn() => AttributeValue::queryBuilder()
                 ->withAttribute()
                 ->withAttributeType()
                 ->filterByModel($modelType, $modelId)
@@ -74,7 +74,9 @@ class AttributeValueController extends BaseController
                         'attribute_id' => $item->attribute_id,
                     ];
                 })
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => AttributeValue::where('model_type', $modelType)->where('model_id', $modelId)->max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);

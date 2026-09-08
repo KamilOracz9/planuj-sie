@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use App\Enums\CacheKeys;
+use App\Models\Translations\AttributeTranslation;
 use App\QueryBuilders\AttributeQueryBuilder;
 use App\Traits\HasCache;
-use App\Traits\HasTranslations;
 use App\Traits\Media\HasMediaCollections;
-use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Kamiloracz9\EloquentTranslatable\HasTranslations;
+use Kamiloracz9\EloquentTranslatable\Sluggable;
 use Spatie\MediaLibrary\HasMedia;
 
 #[Fillable(['id', 'order_column', 'attribute_type_id'])]
@@ -35,6 +36,11 @@ class Attribute extends BaseModel implements HasMedia
         static::deleting(function ($model) {
             static::clearCascadedCache($model);
         });
+    }
+
+    public static function translationModel(): string
+    {
+        return AttributeTranslation::class;
     }
 
     public static function routes()

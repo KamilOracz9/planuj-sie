@@ -2,16 +2,20 @@
 
 namespace App\Traits;
 
+use Spatie\ResponseCache\Facades\ResponseCache;
+
 trait HasCache
 {
     protected static function bootCache()
     {
         static::saved(function ($model) {
             static::clearCache($model);
+            ResponseCache::clear();
         });
 
         static::deleted(function ($model) {
             static::clearCache($model);
+            ResponseCache::clear();
         });
     }
 

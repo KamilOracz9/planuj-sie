@@ -9,6 +9,7 @@ use App\Traits\HasMediaCollectionAssignments;
 use App\Traits\HasMediaCollectionConversions;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Support\Facades\Route;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 #[Fillable(['id', 'code', 'name', 'kind', 'type'])]
@@ -108,14 +109,15 @@ class MediaCollection extends BaseModel
     // is false, so cached objects would come back as __PHP_Incomplete_Class.
     public static function registry(): array
     {
-        return cache()->remember(
-            CacheKeys::MEDIA_COLLECTIONS_REGISTRY->value,
-            config('app.cache_lifetime'),
-            fn() => static::queryBuilder()
+        return SwappableCache::remember(
+            key: CacheKeys::MEDIA_COLLECTIONS_REGISTRY->value,
+            resolve: fn() => static::queryBuilder()
                 ->select(['id', 'code', 'name', 'kind', 'type'])
                 ->get()
                 ->map(fn($item) => (array) $item)
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => static::max('updated_at'),
+            checkInterval: 60,
         );
     }
 

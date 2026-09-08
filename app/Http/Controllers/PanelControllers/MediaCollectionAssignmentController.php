@@ -4,7 +4,10 @@ namespace App\Http\Controllers\PanelControllers;
 
 use App\Enums\CacheKeys;
 use App\Http\Controllers\Controller;
+use App\Models\MediaCollection;
+use App\Models\MediaCollectionAssignment;
 use Illuminate\Support\Facades\DB;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 // Read-only: which MediaCollections are offered for a given model TYPE, per
 // channel - configured centrally on MediaCollection's own edit page (the
@@ -17,10 +20,9 @@ class MediaCollectionAssignmentController extends Controller
     {
         abort_if(!array_key_exists($modelType, config('media.model_types')), 404, 'Unknown model type.');
 
-        $data = cache()->remember(
-            CacheKeys::MEDIA_COLLECTION_ASSIGNMENTS_BY_MODEL_TYPE->value . "_$modelType",
-            config('app.cache_lifetime'),
-            function () use ($modelType) {
+        $data = SwappableCache::remember(
+            key: CacheKeys::MEDIA_COLLECTION_ASSIGNMENTS_BY_MODEL_TYPE->value . "_$modelType",
+            resolve: function () use ($modelType) {
                 return DB::table('media_collection_assignments')
                     ->join('media_collections', 'media_collections.id', '=', 'media_collection_assignments.media_collection_id')
                     ->where('media_collection_assignments.model_type', $modelType)
@@ -42,7 +44,12 @@ class MediaCollectionAssignmentController extends Controller
                         'type' => $row->type,
                     ])->values()->all())
                     ->toArray();
-            }
+            },
+            fingerprint: fn() => implode('|', [
+                MediaCollectionAssignment::where('model_type', $modelType)->max('updated_at'),
+                MediaCollection::max('updated_at'),
+            ]),
+            checkInterval: 60,
         );
 
         return response()->json($data);

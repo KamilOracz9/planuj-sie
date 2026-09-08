@@ -8,6 +8,7 @@ use App\Http\Resources\AttributeResource;
 use App\Models\Attribute;
 use App\Models\AttributeType;
 use App\Models\Translations\AttributeTranslation;
+use Kamiloracz9\SwappableCache\Facades\SwappableCache;
 
 class AttributeController extends BaseController
 {
@@ -26,10 +27,9 @@ class AttributeController extends BaseController
 
     public function select(string $locale)
     {
-        $models = cache()->remember(
-            $this->selectCacheKey . "_$locale",
-            config('app.cache_lifetime'),
-            fn() => Attribute::queryBuilder()
+        $models = SwappableCache::remember(
+            key: $this->selectCacheKey . "_$locale",
+            resolve: fn() => Attribute::queryBuilder()
                 ->withTranslation(AttributeTranslation::class, $locale, 'id', AttributeTranslation::FOREIGN_KEY, Attribute::class)
                 ->withAttributeType()
                 ->select(
@@ -40,7 +40,9 @@ class AttributeController extends BaseController
                 )
                 ->get()
                 ->map(fn($item) => (array) $item)
-                ->toArray()
+                ->toArray(),
+            fingerprint: fn() => Attribute::max('updated_at'),
+            checkInterval: 60,
         );
 
         return response()->json($models);
