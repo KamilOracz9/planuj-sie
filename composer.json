@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "kamiloracz9/eloquent-translatable": "^1.0",
         "kamiloracz9/media-gallery": "^1.0",
         "kamiloracz9/swappable-cache": "^1.0",
