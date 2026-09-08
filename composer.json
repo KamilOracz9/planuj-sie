@@ -104,7 +104,7 @@
         },
         {
             "type": "path",
-            "url": "../../../libs/composer/media-gallery"
+            "url": "git@github.com:kamiloracz9/media-gallerygit.git"
         }
     ]
 }
